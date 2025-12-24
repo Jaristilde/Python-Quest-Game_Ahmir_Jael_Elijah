@@ -1,66 +1,82 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import { motion } from 'framer-motion';
+import { Play, BookOpen } from 'lucide-react';
+import Link from 'next/link';
+import styles from './home.module.css';
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className={styles.main}>
+      {/* Background blobs */}
+      <div className={styles.blob1}></div>
+      <div className={styles.blob2}></div>
+
+      <div className={styles.content}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <span className={styles.badge}>
+            For Kids Ages 9-12
+          </span>
+          <h1 className={styles.title}>
+            Python <br />
+            <span className="title-gradient">Adventure Quest</span>
+          </h1>
+          <p className={styles.description}>
+            Join Jael, Ahmir, and Elijah on an epic coding journey! Help Robo-1, solve puzzles, and learn Python along the way.
           </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className={styles.actions}
+        >
+          <Link href="/level1" className="btn btn-primary" style={{ fontSize: '1.25rem', padding: '1rem 2rem' }}>
+            <Play size={24} fill="currentColor" />
+            Start Quest: Level 1
+          </Link>
+
+          <Link href="/teacher" className="btn btn-secondary" style={{ fontSize: '1.125rem', padding: '1rem 2rem' }}>
+            <BookOpen size={24} />
+            Teacher Guide
+          </Link>
+        </motion.div>
+
+        {/* Features Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className={styles.grid}
+        >
+          <div className={`glass-panel ${styles.featureCard}`} style={{ padding: '1.5rem' }}>
+            <div className={styles.featureIcon} style={{ background: 'var(--primary)' }}>
+              <span style={{ fontSize: '1.5rem' }}>🤖</span>
+            </div>
+            <h3 className={styles.featureTitle}>Story Driven</h3>
+            <p className={styles.featureText}>Help robots and defeat monsters using real code!</p>
+          </div>
+          <div className={`glass-panel ${styles.featureCard}`} style={{ padding: '1.5rem' }}>
+            <div className={styles.featureIcon} style={{ background: 'var(--secondary)' }}>
+              <span style={{ fontSize: '1.5rem' }}>🚀</span>
+            </div>
+            <h3 className={styles.featureTitle}>Real Python</h3>
+            <p className={styles.featureText}>Learn actual syntax used by pros, simplified for you.</p>
+          </div>
+          <div className={`glass-panel ${styles.featureCard}`} style={{ padding: '1.5rem' }}>
+            <div className={styles.featureIcon} style={{ background: 'var(--accent)' }}>
+              <span style={{ fontSize: '1.5rem' }}>🏆</span>
+            </div>
+            <h3 className={styles.featureTitle}>Earn Badges</h3>
+            <p className={styles.featureText}>Collect rewards as you master new skills.</p>
+          </div>
+        </motion.div>
+      </div>
+    </main>
   );
 }

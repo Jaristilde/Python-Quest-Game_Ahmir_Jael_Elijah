@@ -1,0 +1,289 @@
+.container {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--text);
+}
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text-muted);
+}
+
+.header {
+    padding: 1.5rem 2rem;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.backLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+
+.backLink:hover {
+    color: white;
+}
+
+.content {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.profileCard {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius);
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.avatarSection {
+    position: relative;
+    display: inline-block;
+}
+
+.avatarLarge {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    margin: 0 auto;
+}
+
+.editAvatarBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 1rem auto 0;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.editAvatarBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.avatarPicker {
+    position: absolute;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
+
+.avatarOption {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.avatarOption:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.avatarActive {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.2);
+}
+
+.checkIcon {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background: var(--primary);
+    border-radius: 50%;
+    padding: 2px;
+}
+
+.username {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-top: 1rem;
+}
+
+.joinDate {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.statCard {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.statValue {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.statLabel {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.progressSection,
+.levelsSection {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.progressBar {
+    height: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 9999px;
+}
+
+.progressText {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.timeStats {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+}
+
+.levelsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.levelItem {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.75rem;
+}
+
+.levelBadge {
+    background: var(--primary);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+}
+
+.levelDetails {
+    flex: 1;
+}
+
+.levelStats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+}
+
+.levelStats span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--text-muted);
+}
+
+.levelDate {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.levelStars {
+    display: flex;
+    gap: 0.25rem;
+}
+
+@media (max-width: 600px) {
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .levelItem {
+        flex-wrap: wrap;
+    }
+
+    .levelStars {
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+    }
+}

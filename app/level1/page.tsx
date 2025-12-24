@@ -1,15 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, Play, Check, ChevronRight, ChevronLeft, Award, HelpCircle, AlertCircle, Home, Lock, RefreshCcw, Heart, Zap, Coins } from 'lucide-react';
+import { Bot, Play, Check, ChevronRight, ChevronLeft, Award, HelpCircle, AlertCircle, Home, Lock, RefreshCcw, Heart, Zap, Coins, User } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth, getAvatarEmoji } from '../context/AuthContext';
 import styles from './level1.module.css';
 
 // Types for Game State
 type Step = 'intro' | 'lesson' | 'challenge' | 'quiz' | 'complete';
 
 export default function Level1() {
+    const router = useRouter();
+    const { user, isLoading, updateLives, addXpAndCoins, completeLevel, refreshUser } = useAuth();
+    const startTime = useRef<number>(Date.now());
+    const attemptCount = useRef<number>(0);
+
     const [step, setStep] = useState<Step>('intro');
     const [code, setCode] = useState('');
     const [output, setOutput] = useState('');
@@ -17,12 +24,7 @@ export default function Level1() {
     const [robotMood, setRobotMood] = useState<'neutral' | 'happy' | 'error'>('neutral');
     const [showHint, setShowHint] = useState(false);
     const [quizAnswer, setQuizAnswer] = useState<number | null>(null);
-
-    // Game Stats
-    const [hearts, setHearts] = useState(5);
-    const [xp, setXp] = useState(0);
-    const [coins, setCoins] = useState(0);
-    const [levelProgress, setLevelProgress] = useState(0); // 0-100
+    const [levelProgress, setLevelProgress] = useState(0);
     const [failedAttempts, setFailedAttempts] = useState(0);
 
     // Messages based on state
@@ -31,12 +33,26 @@ export default function Level1() {
         text: "Initializing..."
     });
 
+    // Redirect to login if not authenticated
+    useEffect(() => {
+        if (!isLoading && !user) {
+            router.push('/login');
+        }
+    }, [user, isLoading, router]);
+
+    // Initialize from user data
+    useEffect(() => {
+        if (user) {
+            startTime.current = Date.now();
+        }
+    }, [user]);
+
     useEffect(() => {
         switch (step) {
             case 'intro':
                 setDialogue({
                     title: "⚠️ CRITICAL ALERT",
-                    text: "🧠 Robo-1’s brain is frozen! Can you type the right code to wake him up?"
+                    text: "🧠 Robo-1's brain is frozen! Can you type the right code to wake him up?"
                 });
                 setRobotMood('error');
                 setLevelProgress(0);
@@ -72,9 +88,13 @@ export default function Level1() {
                 });
                 setRobotMood('happy');
                 setLevelProgress(100);
+                // Save progress when level completes
+                if (user) {
+                    const timeSpent = Math.round((Date.now() - startTime.current) / 1000);
+                    completeLevel(1, 75, 30, attemptCount.current, timeSpent);
+                }
                 break;
         }
-        // content reset on step change
         setShowHint(false);
         setOutput('');
         setFailedAttempts(0);
@@ -85,10 +105,11 @@ export default function Level1() {
         setOutput(msg);
         const newAttempts = failedAttempts + 1;
         setFailedAttempts(newAttempts);
+        attemptCount.current++;
 
         if (newAttempts >= 3) {
-            if (hearts > 0) {
-                setHearts(h => h - 1);
+            if (user && user.progress.lives > 0) {
+                updateLives(-1);
                 setDialogue({
                     title: "Give it another shot!",
                     text: "Don't give up! I lost a heart, but we can do this. Check the hint!"
@@ -108,8 +129,8 @@ export default function Level1() {
     };
 
     const handleSkip = () => {
-        if (hearts > 0) {
-            setHearts(h => h - 1);
+        if (user && user.progress.lives > 0) {
+            updateLives(-1);
             setIsSuccess(true);
             setRobotMood('happy');
             setDialogue({
@@ -122,6 +143,7 @@ export default function Level1() {
     const runCode = () => {
         setOutput("Running...");
         setRobotMood('neutral');
+        attemptCount.current++;
 
         setTimeout(() => {
             if (step === 'challenge') {
@@ -135,8 +157,7 @@ export default function Level1() {
                     if (content === "Hello World") {
                         setIsSuccess(true);
                         setRobotMood('happy');
-                        setXp(x => x + 25);
-                        setCoins(c => c + 10);
+                        addXpAndCoins(25, 10);
                         setDialogue({
                             title: "🎉 Nice! Robo-1 is unlocked.",
                             text: "Awesome work! I'm back online. On to the next mission!"
@@ -175,7 +196,7 @@ export default function Level1() {
             setStep('challenge');
         }
         else if (step === 'challenge' && isSuccess) setStep('quiz');
-        else if (step === 'quiz' && quizAnswer === 1) setStep('complete');
+        else if (step === 'quiz') setStep('complete');
     };
 
     const navBack = () => {
@@ -183,6 +204,22 @@ export default function Level1() {
         else if (step === 'challenge') setStep('lesson');
         else if (step === 'quiz') setStep('challenge');
     };
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className={styles.container}>
+                <div className="flex items-center justify-center h-screen">
+                    <div className="text-slate-400">Loading...</div>
+                </div>
+            </div>
+        );
+    }
+
+    // Not logged in state
+    if (!user) {
+        return null;
+    }
 
     return (
         <div className={styles.container}>
@@ -206,19 +243,25 @@ export default function Level1() {
                     </div>
                 </div>
 
-                {/* Gamification Stats */}
-                <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-1 text-red-400 font-bold bg-red-400/10 px-3 py-1 rounded-full border border-red-400/20">
-                        <Heart size={18} fill="currentColor" />
-                        <span>{hearts}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-amber-400 font-bold bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
-                        <Coins size={18} />
-                        <span>{coins}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-purple-400 font-bold bg-purple-400/10 px-3 py-1 rounded-full border border-purple-400/20">
-                        <Zap size={18} fill="currentColor" />
-                        <span>{xp} XP</span>
+                {/* User Stats from Auth */}
+                <div className="flex items-center gap-4">
+                    <Link href="/profile" className="flex items-center gap-2 text-slate-300 hover:text-white transition">
+                        <span className="text-xl">{getAvatarEmoji(user.avatar)}</span>
+                        <span className="text-sm font-medium hidden sm:inline">{user.username}</span>
+                    </Link>
+                    <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1 text-red-400 font-bold bg-red-400/10 px-3 py-1 rounded-full border border-red-400/20">
+                            <Heart size={16} fill="currentColor" />
+                            <span>{user.progress.lives}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-amber-400 font-bold bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
+                            <Coins size={16} />
+                            <span>{user.progress.coins}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-purple-400 font-bold bg-purple-400/10 px-3 py-1 rounded-full border border-purple-400/20">
+                            <Zap size={16} fill="currentColor" />
+                            <span>{user.progress.xp}</span>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -245,7 +288,6 @@ export default function Level1() {
                                     robotMood === 'error' ? "text-red-400" : "text-blue-400"
                                 }`} />
 
-                            {/* Status Indicator */}
                             <div className={`absolute top-0 right-0 p-2 rounded-full border-2 ${robotMood === 'happy' ? "bg-green-500 border-green-300" :
                                     robotMood === 'error' ? "bg-red-500 border-red-300" : "bg-blue-500 border-blue-300"
                                 }`}>
@@ -288,7 +330,7 @@ export default function Level1() {
                                 Robo-1 needs a reboot! Are you ready to use your coding powers to wake him up?
                             </p>
                             <button onClick={navNext} className="btn btn-primary text-lg px-8">
-                                Lets Go! <ChevronRight size={20} />
+                                Let's Go! <ChevronRight size={20} />
                             </button>
                         </div>
                     )}
@@ -384,7 +426,7 @@ export default function Level1() {
                                     {isSuccess ? 'Success!' : 'Run Code'}
                                 </button>
 
-                                {!isSuccess && failedAttempts >= 3 && (
+                                {!isSuccess && failedAttempts >= 3 && user && user.progress.lives > 0 && (
                                     <button onClick={handleSkip} className="btn btn-secondary text-red-300" title="Skip using a Heart">
                                         Skip (-1 <Heart size={14} className="inline" />)
                                     </button>
@@ -460,8 +502,7 @@ export default function Level1() {
                                     disabled={quizAnswer === null}
                                     onClick={() => {
                                         if (quizAnswer === 0) {
-                                            setXp(x => x + 50);
-                                            setCoins(c => c + 20);
+                                            addXpAndCoins(50, 20);
                                             navNext();
                                         }
                                         else alert("Not quite! Remember: print(\"Message\")");
@@ -482,7 +523,7 @@ export default function Level1() {
                             </div>
                             <h2 className="text-4xl font-black mb-2 text-white">Level Complete!</h2>
                             <p className="text-xl text-slate-300 mb-8 max-w-lg">
-                                You earned <span className="text-purple-400 font-bold">{xp} XP</span> and <span className="text-amber-400 font-bold">{coins} Coins</span>!
+                                You earned <span className="text-purple-400 font-bold">{user.progress.xp} XP</span> total!
                             </p>
 
                             <div className="flex flex-col gap-3 w-full max-w-sm">

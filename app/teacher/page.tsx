@@ -1,11 +1,90 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, Download, Users, Target, CheckCircle, Lightbulb, Clock, Code, Award } from 'lucide-react';
+import { ArrowLeft, BookOpen, Download, Users, Target, CheckCircle, Lightbulb, Clock, Code, Award, Lock, Unlock, Trash2, RefreshCcw, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
+import { getAllUsers, deleteUser, resetUserProgress, TEACHER_PASSWORD, getAvatarEmoji, User } from '../lib/auth';
 import styles from './teacher.module.css';
 
 export default function TeacherGuide() {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [password, setPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [users, setUsers] = useState<User[]>([]);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [showDashboard, setShowDashboard] = useState(false);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            setUsers(getAllUsers());
+        }
+    }, [isAuthenticated]);
+
+    const handlePasswordSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (password === TEACHER_PASSWORD) {
+            setIsAuthenticated(true);
+            setPasswordError('');
+        } else {
+            setPasswordError('Incorrect password. Try again!');
+        }
+    };
+
+    const handleDeleteUser = (userId: string) => {
+        if (confirm('Are you sure you want to delete this user? This cannot be undone.')) {
+            deleteUser(userId);
+            setUsers(getAllUsers());
+            setSelectedUser(null);
+        }
+    };
+
+    const handleResetProgress = (userId: string) => {
+        if (confirm('Reset this user\'s progress? They will start from Level 1 with 0 XP.')) {
+            resetUserProgress(userId);
+            setUsers(getAllUsers());
+            if (selectedUser?.id === userId) {
+                setSelectedUser(getAllUsers().find(u => u.id === userId) || null);
+            }
+        }
+    };
+
+    const exportProgress = () => {
+        const report = users.map(user => {
+            return `
+=== ${user.username} ===
+Avatar: ${getAvatarEmoji(user.avatar)}
+Created: ${new Date(user.createdAt).toLocaleDateString()}
+Last Active: ${new Date(user.progress.lastActive).toLocaleDateString()}
+
+Stats:
+- Current Level: ${user.progress.currentLevel}
+- Total XP: ${user.progress.xp}
+- Coins: ${user.progress.coins}
+- Lives: ${user.progress.lives}
+- Total Time Played: ${Math.round(user.progress.totalTimePlayed / 60)} minutes
+
+Completed Levels:
+${user.progress.completedLevels.map(l => `  - Level ${l.level}: ${l.xpEarned} XP, ${l.attempts} attempts`).join('\n') || '  None yet'}
+`;
+        }).join('\n---\n');
+
+        const blob = new Blob([`Python Adventure Quest - Progress Report\nGenerated: ${new Date().toLocaleString()}\n\n${report}`], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `progress-report-${new Date().toISOString().split('T')[0]}.txt`;
+        a.click();
+    };
+
+    const formatDate = (dateStr: string) => {
+        return new Date(dateStr).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        });
+    };
+
     const levels = [
         {
             level: 1,
@@ -59,6 +138,128 @@ export default function TeacherGuide() {
             </header>
 
             <div className={styles.content}>
+                {/* Dashboard Toggle */}
+                <div className={styles.dashboardToggle}>
+                    <button
+                        onClick={() => setShowDashboard(!showDashboard)}
+                        className={`${styles.toggleButton} ${showDashboard ? styles.toggleActive : ''}`}
+                    >
+                        <Users size={18} />
+                        Student Dashboard
+                        {showDashboard ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    </button>
+                </div>
+
+                {/* Student Dashboard (Password Protected) */}
+                {showDashboard && (
+                    <motion.section
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className={styles.dashboardSection}
+                    >
+                        {!isAuthenticated ? (
+                            <div className={styles.passwordForm}>
+                                <Lock size={40} className="text-indigo-400 mb-4" />
+                                <h3>Teacher Access Required</h3>
+                                <p className="text-slate-400 mb-4">Enter the teacher password to view student progress.</p>
+                                <form onSubmit={handlePasswordSubmit}>
+                                    <input
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="Enter password"
+                                        className={styles.passwordInput}
+                                    />
+                                    {passwordError && <p className={styles.passwordError}>{passwordError}</p>}
+                                    <button type="submit" className="btn btn-primary w-full mt-4">
+                                        <Unlock size={18} /> Unlock Dashboard
+                                    </button>
+                                </form>
+                                <p className={styles.hint}>Hint: teacher2024</p>
+                            </div>
+                        ) : (
+                            <div className={styles.dashboardContent}>
+                                <div className={styles.dashboardHeader}>
+                                    <h3><Users size={20} /> Registered Students ({users.length}/15)</h3>
+                                    <button onClick={exportProgress} className="btn btn-secondary">
+                                        <Download size={16} /> Export Report
+                                    </button>
+                                </div>
+
+                                {users.length === 0 ? (
+                                    <div className={styles.emptyState}>
+                                        <p>No students registered yet.</p>
+                                    </div>
+                                ) : (
+                                    <div className={styles.userGrid}>
+                                        {users.map(user => (
+                                            <div
+                                                key={user.id}
+                                                className={`${styles.userCard} ${selectedUser?.id === user.id ? styles.userCardActive : ''}`}
+                                                onClick={() => setSelectedUser(selectedUser?.id === user.id ? null : user)}
+                                            >
+                                                <div className={styles.userCardHeader}>
+                                                    <span className={styles.userCardAvatar}>{getAvatarEmoji(user.avatar)}</span>
+                                                    <div>
+                                                        <div className={styles.userCardName}>{user.username}</div>
+                                                        <div className={styles.userCardLevel}>Level {user.progress.currentLevel}</div>
+                                                    </div>
+                                                    <div className={styles.userCardXp}>{user.progress.xp} XP</div>
+                                                </div>
+
+                                                {selectedUser?.id === user.id && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0 }}
+                                                        animate={{ opacity: 1 }}
+                                                        className={styles.userCardDetails}
+                                                    >
+                                                        <div className={styles.detailsGrid}>
+                                                            <div><span>Lives:</span> {user.progress.lives} ❤️</div>
+                                                            <div><span>Coins:</span> {user.progress.coins} 🪙</div>
+                                                            <div><span>Joined:</span> {formatDate(user.createdAt)}</div>
+                                                            <div><span>Last Active:</span> {formatDate(user.progress.lastActive)}</div>
+                                                        </div>
+
+                                                        <div className={styles.completedLevels}>
+                                                            <strong>Completed:</strong>
+                                                            {user.progress.completedLevels.length === 0 ? (
+                                                                <span className="ml-2 text-slate-500">None yet</span>
+                                                            ) : (
+                                                                <div className={styles.levelBadges}>
+                                                                    {user.progress.completedLevels.map(l => (
+                                                                        <span key={l.level} className={styles.levelBadge}>
+                                                                            Lv.{l.level}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            )}
+                                                        </div>
+
+                                                        <div className={styles.userCardActions}>
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); handleResetProgress(user.id); }}
+                                                                className={styles.resetBtn}
+                                                            >
+                                                                <RefreshCcw size={14} /> Reset
+                                                            </button>
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); handleDeleteUser(user.id); }}
+                                                                className={styles.deleteBtn}
+                                                            >
+                                                                <Trash2 size={14} /> Delete
+                                                            </button>
+                                                        </div>
+                                                    </motion.div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </motion.section>
+                )}
+
                 {/* Welcome Section */}
                 <motion.section
                     initial={{ opacity: 0, y: 20 }}
@@ -68,14 +269,14 @@ export default function TeacherGuide() {
                     <h2 className={styles.sectionTitle}>Welcome, Educators! 👋</h2>
                     <p className={styles.welcomeText}>
                         Python Adventure Quest is designed for kids ages <strong>9-12</strong> learning to code on Chromebooks.
-                        This guide helps you support <strong>Jael</strong>, <strong>Ahmir</strong>, and <strong>Elijah</strong> as they progress through the levels.
+                        This guide helps you support students as they progress through the levels.
                     </p>
 
                     <div className={styles.statsGrid}>
                         <div className={styles.statCard}>
                             <Users size={32} className="text-indigo-400" />
                             <div>
-                                <div className={styles.statValue}>3</div>
+                                <div className={styles.statValue}>{users.length || 0}</div>
                                 <div className={styles.statLabel}>Students</div>
                             </div>
                         </div>
@@ -109,7 +310,7 @@ export default function TeacherGuide() {
                                 className={styles.levelCard}
                             >
                                 <div className={styles.levelHeader}>
-                                    <span className={styles.levelBadge}>Level {lvl.level}</span>
+                                    <span className={styles.levelBadgeStyle}>Level {lvl.level}</span>
                                     <span className={styles.duration}><Clock size={14} /> {lvl.duration}</span>
                                 </div>
                                 <h3 className={styles.levelTitle}>{lvl.title}</h3>
@@ -172,7 +373,7 @@ export default function TeacherGuide() {
                             <li><span className="text-red-400">❤️</span> <strong>Hearts</strong> — Lost after 3 wrong attempts; used to skip if stuck</li>
                         </ul>
                         <p className="mt-4 text-slate-400 text-sm">
-                            Note: In future updates, you'll be able to export progress reports as PDF or CSV.
+                            Use the Student Dashboard above to view detailed progress for each child.
                         </p>
                     </div>
                 </section>

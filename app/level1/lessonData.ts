@@ -2,12 +2,14 @@
 export interface LessonData {
     id: number;
     title: string;
-    subtitle: string; // Kid-friendly explanation
+    subtitle: string;
     emoji: string;
     concept: string;
     xpReward: number;
     successMessage: string;
     description: string;
+    lessonType: 'learn' | 'practice' | 'project';
+    hasSupercharge?: boolean;
 }
 
 export const LEVEL1_LESSONS: LessonData[] = [
@@ -19,7 +21,8 @@ export const LEVEL1_LESSONS: LessonData[] = [
         concept: "print()",
         xpReward: 10,
         successMessage: "You made your computer talk! Robo-1 is awake!",
-        description: "Teach Robo-1 to speak using the print command"
+        description: "Teach Robo-1 to speak using the print command",
+        lessonType: 'learn'
     },
     {
         id: 2,
@@ -29,7 +32,8 @@ export const LEVEL1_LESSONS: LessonData[] = [
         concept: "Variables",
         xpReward: 10,
         successMessage: "You taught your computer to remember things!",
-        description: "Create nicknames for things your computer remembers"
+        description: "Create nicknames for things your computer remembers",
+        lessonType: 'learn'
     },
     {
         id: 3,
@@ -39,7 +43,8 @@ export const LEVEL1_LESSONS: LessonData[] = [
         concept: "String Concatenation",
         xpReward: 10,
         successMessage: "Word Smoosher Extraordinaire!",
-        description: "Connect words together like train cars"
+        description: "Connect words together like train cars",
+        lessonType: 'learn'
     },
     {
         id: 4,
@@ -49,7 +54,8 @@ export const LEVEL1_LESSONS: LessonData[] = [
         concept: "Math (+, -, *, /)",
         xpReward: 10,
         successMessage: "Math Wizard activated!",
-        description: "Turn your computer into a super calculator"
+        description: "Turn your computer into a super calculator",
+        lessonType: 'learn'
     },
     {
         id: 5,
@@ -59,17 +65,20 @@ export const LEVEL1_LESSONS: LessonData[] = [
         concept: "Variables with Numbers",
         xpReward: 10,
         successMessage: "Number Keeper unlocked!",
-        description: "Store numbers and do math with them"
+        description: "Store numbers and do math with them",
+        lessonType: 'learn'
     },
     {
         id: 6,
-        title: "Comparing Numbers",
-        subtitle: "Asking Yes or No Questions",
-        emoji: "⚖️",
-        concept: "Number Comparisons (==, >, <)",
-        xpReward: 10,
-        successMessage: "Number Comparer achieved!",
-        description: "Ask which number is bigger, smaller, or equal"
+        title: "Python Basics 1",
+        subtitle: "Practice Time!",
+        emoji: "🎯",
+        concept: "print, variables, math",
+        xpReward: 15,
+        successMessage: "Practice Champion!",
+        description: "Practice everything you've learned so far",
+        lessonType: 'practice',
+        hasSupercharge: true
     },
     {
         id: 7,
@@ -79,77 +88,87 @@ export const LEVEL1_LESSONS: LessonData[] = [
         concept: "f-strings",
         xpReward: 10,
         successMessage: "F-String Sorcerer!",
-        description: "Put variables inside your sentences like magic"
+        description: "Put variables inside your sentences like magic",
+        lessonType: 'learn'
     },
     {
         id: 8,
+        title: "Comparing Things",
+        subtitle: "Asking Yes or No Questions",
+        emoji: "⚖️",
+        concept: "Comparisons (==, >, <)",
+        xpReward: 10,
+        successMessage: "Comparer achieved!",
+        description: "Ask which is bigger, smaller, or equal",
+        lessonType: 'learn'
+    },
+    {
+        id: 9,
         title: "If This, Then That",
         subtitle: "Teaching Your Computer to Choose",
         emoji: "🔀",
         concept: "if/else statements",
-        xpReward: 15,
+        xpReward: 10,
         successMessage: "Decision Maker Pro!",
-        description: "Make your code choose different paths"
+        description: "Make your code choose different paths",
+        lessonType: 'learn'
     },
     {
-        id: 9,
+        id: 10,
+        title: "Python Basics 2",
+        subtitle: "More Practice!",
+        emoji: "💪",
+        concept: "f-strings, comparisons, if/else",
+        xpReward: 15,
+        successMessage: "Practice Pro!",
+        description: "Master f-strings and conditionals",
+        lessonType: 'practice',
+        hasSupercharge: true
+    },
+    {
+        id: 11,
         title: "Making Lists",
         subtitle: "Remember Many Things at Once",
         emoji: "📝",
         concept: "Lists []",
-        xpReward: 15,
+        xpReward: 10,
         successMessage: "List Legend unlocked!",
-        description: "Store multiple things in one variable"
+        description: "Store multiple things in one variable",
+        lessonType: 'learn'
     },
     {
-        id: 10,
+        id: 12,
         title: "Repeat After Me",
         subtitle: "Do This Exactly X Times",
         emoji: "🔁",
         concept: "for loops",
-        xpReward: 15,
+        xpReward: 10,
         successMessage: "Loop Legend!",
-        description: "Do things over and over without retyping"
-    },
-    {
-        id: 11,
-        title: "Comparing Words",
-        subtitle: "Do These Words Match?",
-        emoji: "🔤",
-        concept: "String Comparisons",
-        xpReward: 15,
-        successMessage: "Word Comparer Master!",
-        description: "Check if words match or come before/after alphabetically"
-    },
-    {
-        id: 12,
-        title: "What Type Is It?",
-        subtitle: "Is It Text, Number, or Something Else?",
-        emoji: "🔍",
-        concept: "type() and Data Types",
-        xpReward: 15,
-        successMessage: "Type Detective!",
-        description: "Discover if something is text, number, or something else"
+        description: "Do things over and over without retyping",
+        lessonType: 'learn'
     },
     {
         id: 13,
-        title: "Types Matter!",
-        subtitle: "Why '5' and 5 Are Different",
-        emoji: "🎭",
-        concept: "Type Conversion",
-        xpReward: 15,
-        successMessage: "Type Transformer!",
-        description: "Learn why '5' and 5 are different and how to convert them"
-    },
-    {
-        id: 14,
         title: "Ask the User",
         subtitle: "Getting Answers from People",
         emoji: "💬",
         concept: "input()",
-        xpReward: 20,
+        xpReward: 10,
         successMessage: "Input Master!",
-        description: "Get answers from the person using your program"
+        description: "Get answers from the person using your program",
+        lessonType: 'learn'
+    },
+    {
+        id: 14,
+        title: "Python Basics 3",
+        subtitle: "Final Practice!",
+        emoji: "🏆",
+        concept: "lists, loops, input",
+        xpReward: 15,
+        successMessage: "Practice Legend!",
+        description: "Master all the basics before the final project",
+        lessonType: 'practice',
+        hasSupercharge: true
     },
     {
         id: 15,
@@ -159,7 +178,8 @@ export const LEVEL1_LESSONS: LessonData[] = [
         concept: "Interactive Programs",
         xpReward: 25,
         successMessage: "Bot Builder Supreme! You completed Level 1!",
-        description: "Make Robo-1 talk back to users with everything you learned"
+        description: "Make Robo-1 talk back to users with everything you learned",
+        lessonType: 'project'
     }
 ];
 

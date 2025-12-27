@@ -100,7 +100,7 @@ export default function Lesson5() {
         <div className={styles.container}>
             <header className={styles.header}>
                 <Link href="/level1" className={styles.backBtn}><ArrowLeft size={18} /> Back</Link>
-                <span className={styles.lessonInfo}>Lesson {LESSON.id} of 10</span>
+                <span className={styles.lessonInfo}>Lesson {LESSON.id} of 15</span>
                 <div className={styles.stats}>
                     <div className={`${styles.statBadge} ${styles.hearts}`}><Heart size={14} fill="currentColor" /> {user.progress.lives}</div>
                     <div className={`${styles.statBadge} ${styles.xp}`}><Zap size={14} fill="currentColor" /> {user.progress.xp}</div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Play, BookOpen, LogIn, UserPlus, LogOut, User, Zap, Trophy } from 'lucide-react';
+import { Play, BookOpen, LogIn, UserPlus, LogOut, User, Zap, Trophy, Lock, Check, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth, getAvatarEmoji } from './context/AuthContext';
 import { getLeaderboard } from './lib/auth';
@@ -85,10 +85,24 @@ export default function Home() {
         >
           {user ? (
             <>
-              <Link href={`/level${user.progress.currentLevel}`} className="btn btn-primary" style={{ fontSize: '1.25rem', padding: '1rem 2rem' }}>
-                <Play size={24} fill="currentColor" />
-                {user.progress.currentLevel === 1 ? 'Start Level 1' : `Continue Level ${user.progress.currentLevel}`}
-              </Link>
+              {/* Calculate which game level (1, 2, etc.) user should be on */}
+              {(() => {
+                // Level 1 has lessons 1-15. If all completed, show Level 2
+                const level1Complete = user.progress.completedLevels.filter(l => l.level >= 1 && l.level <= 15).length === 15;
+                const gameLevel = level1Complete ? 2 : 1;
+                const isNewUser = user.progress.completedLevels.length === 0;
+
+                return (
+                  <Link
+                    href={gameLevel === 2 ? '/level2' : '/level1'}
+                    className="btn btn-primary"
+                    style={{ fontSize: '1.25rem', padding: '1rem 2rem' }}
+                  >
+                    <Play size={24} fill="currentColor" />
+                    {isNewUser ? 'Start Level 1' : gameLevel === 2 ? 'Continue to Level 2' : 'Continue Level 1'}
+                  </Link>
+                );
+              })()}
               <Link href="/profile" className="btn btn-secondary" style={{ fontSize: '1.125rem', padding: '1rem 2rem' }}>
                 <User size={24} />
                 My Profile
@@ -112,6 +126,180 @@ export default function Home() {
             Teacher Guide
           </Link>
         </motion.div>
+
+        {/* Level Selection - Show when user is logged in */}
+        {user && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            style={{ marginTop: '2rem', width: '100%', maxWidth: '700px' }}
+          >
+            <h3 style={{
+              textAlign: 'center',
+              marginBottom: '1.5rem',
+              fontSize: '1.25rem',
+              fontWeight: 700,
+              color: 'var(--text-muted)'
+            }}>
+              🗺️ Your Adventures
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+              {(() => {
+                const level1Completed = user.progress.completedLevels.filter(l => l.level >= 1 && l.level <= 15);
+                const level1Complete = level1Completed.length >= 15;
+                const level2Completed = user.progress.completedLevels.filter(l => l.level >= 16 && l.level <= 33);
+                const level2Complete = level2Completed.length >= 18;
+
+                return (
+                  <>
+                    {/* Level 1 Card */}
+                    <Link
+                      href="/level1"
+                      className="glass-panel"
+                      style={{
+                        padding: '1.25rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        textDecoration: 'none',
+                        border: level1Complete ? '2px solid rgba(16, 185, 129, 0.5)' : '1px solid rgba(255,255,255,0.1)',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      <div style={{
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '12px',
+                        background: 'linear-gradient(135deg, #a855f7, #ec4899)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.75rem'
+                      }}>
+                        🚀
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Level 1: Code Rookie</span>
+                          {level1Complete && <Check size={18} className="text-emerald-400" />}
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                          {level1Complete ? '15/15 Complete!' : `${level1Completed.length}/15 Lessons`}
+                        </div>
+                        <div style={{
+                          marginTop: '0.5rem',
+                          height: '4px',
+                          background: 'rgba(255,255,255,0.1)',
+                          borderRadius: '2px',
+                          overflow: 'hidden'
+                        }}>
+                          <div style={{
+                            width: `${(level1Completed.length / 15) * 100}%`,
+                            height: '100%',
+                            background: 'linear-gradient(90deg, #a855f7, #ec4899)',
+                            transition: 'width 0.3s ease'
+                          }} />
+                        </div>
+                      </div>
+                      <ChevronRight size={20} style={{ color: 'var(--text-muted)' }} />
+                    </Link>
+
+                    {/* Level 2 Card */}
+                    {level1Complete ? (
+                      <Link
+                        href="/level2"
+                        className="glass-panel"
+                        style={{
+                          padding: '1.25rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '1rem',
+                          textDecoration: 'none',
+                          border: level2Complete ? '2px solid rgba(16, 185, 129, 0.5)' : '1px solid rgba(245, 158, 11, 0.3)',
+                          background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(236, 72, 153, 0.05))',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <div style={{
+                          width: '60px',
+                          height: '60px',
+                          borderRadius: '12px',
+                          background: 'linear-gradient(135deg, #f59e0b, #ec4899)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.75rem'
+                        }}>
+                          🥷
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Level 2: Math Ninja</span>
+                            {level2Complete ? <Check size={18} className="text-emerald-400" /> : <span style={{ fontSize: '0.75rem', background: 'linear-gradient(135deg, #10b981, #3b82f6)', padding: '2px 8px', borderRadius: '10px', fontWeight: 600 }}>NEW!</span>}
+                          </div>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                            {level2Complete ? '18/18 Complete!' : `${level2Completed.length}/18 Lessons`}
+                          </div>
+                          <div style={{
+                            marginTop: '0.5rem',
+                            height: '4px',
+                            background: 'rgba(255,255,255,0.1)',
+                            borderRadius: '2px',
+                            overflow: 'hidden'
+                          }}>
+                            <div style={{
+                              width: `${(level2Completed.length / 18) * 100}%`,
+                              height: '100%',
+                              background: 'linear-gradient(90deg, #f59e0b, #ec4899)',
+                              transition: 'width 0.3s ease'
+                            }} />
+                          </div>
+                        </div>
+                        <ChevronRight size={20} style={{ color: 'var(--text-muted)' }} />
+                      </Link>
+                    ) : (
+                      <div
+                        className="glass-panel"
+                        style={{
+                          padding: '1.25rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '1rem',
+                          opacity: 0.6,
+                          cursor: 'not-allowed',
+                          border: '1px solid rgba(255,255,255,0.05)'
+                        }}
+                      >
+                        <div style={{
+                          width: '60px',
+                          height: '60px',
+                          borderRadius: '12px',
+                          background: 'rgba(100, 100, 100, 0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.75rem'
+                        }}>
+                          🔒
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-muted)' }}>Level 2: Math Ninja</span>
+                          </div>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                            Complete Level 1 to unlock!
+                          </div>
+                        </div>
+                        <Lock size={20} style={{ color: 'var(--text-muted)' }} />
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
+          </motion.div>
+        )}
 
         {/* Leaderboard */}
         {leaderboard.length > 0 && (

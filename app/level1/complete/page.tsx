@@ -145,20 +145,57 @@ export default function Level1Complete() {
                     {getAvatarEmoji(user.avatar)}
                 </motion.div>
 
+                {/* Level 2 Unlocked! */}
+                <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 0.9, type: 'spring', stiffness: 200 }}
+                    style={{
+                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2))',
+                        border: '2px solid rgba(16, 185, 129, 0.5)',
+                        borderRadius: 'var(--radius)',
+                        padding: '1.5rem',
+                        marginBottom: '2rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '1rem'
+                    }}
+                >
+                    <motion.span
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 0.5, repeat: 3 }}
+                        style={{ fontSize: '2.5rem' }}
+                    >
+                        🔓
+                    </motion.span>
+                    <div>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#10b981' }}>Level 2 Unlocked!</h3>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>You're ready for the Math Ninja adventure!</p>
+                    </div>
+                </motion.div>
+
                 {/* Actions */}
                 <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.9 }}
+                    transition={{ delay: 1.1 }}
                     style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}
                 >
-                    <button
+                    <Link
+                        href="/level2"
                         className="btn btn-primary"
-                        style={{ fontSize: '1.1rem', padding: '1rem 2rem', opacity: 0.5, cursor: 'not-allowed' }}
-                        disabled
+                        style={{
+                            fontSize: '1.1rem',
+                            padding: '1rem 2rem',
+                            background: 'linear-gradient(135deg, #f59e0b, #ec4899)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem'
+                        }}
                     >
-                        🔒 Continue to Level 2: Math Ninja (Coming Soon!)
-                    </button>
+                        🥷 Continue to Level 2: Math Ninja <ChevronRight size={20} />
+                    </Link>
                     <Link href="/" className="btn btn-secondary" style={{ padding: '0.875rem 1.5rem' }}>
                         <Home size={18} /> Return to Home
                     </Link>

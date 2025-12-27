@@ -114,14 +114,14 @@ export default function Lesson10() {
     if (lessonComplete) {
         return (
             <div className={styles.successOverlay}>
-                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className={styles.successIcon} style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
-                    <Trophy size={50} className="text-white" />
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className={styles.successIcon}>
+                    <Check size={50} className="text-white" />
                 </motion.div>
-                <h2 className={styles.successTitle}>🎉 LEVEL 1 COMPLETE!</h2>
-                <p className={styles.successMessage}>{LESSON.successMessage} You finished all 10 lessons!</p>
+                <h2 className={styles.successTitle}>Lesson Complete!</h2>
+                <p className={styles.successMessage}>{LESSON.successMessage}</p>
                 <div className={styles.successXp}><Zap size={20} fill="currentColor" /> +{LESSON.xpReward} XP</div>
-                <Link href="/level1/complete" className={`${styles.navBtn} ${styles.success}`} style={{ background: '#f59e0b' }}>
-                    Claim Your Badge! <Trophy size={18} />
+                <Link href="/level1/lesson11" className={`${styles.navBtn} ${styles.success}`}>
+                    Next Lesson <ChevronRight size={18} />
                 </Link>
             </div>
         );
@@ -131,7 +131,7 @@ export default function Lesson10() {
         <div className={styles.container}>
             <header className={styles.header}>
                 <Link href="/level1" className={styles.backBtn}><ArrowLeft size={18} /> Back</Link>
-                <span className={styles.lessonInfo}>Lesson {LESSON.id} of 10 - FINAL!</span>
+                <span className={styles.lessonInfo}>Lesson {LESSON.id} of 15</span>
                 <div className={styles.stats}>
                     <div className={`${styles.statBadge} ${styles.hearts}`}><Heart size={14} fill="currentColor" /> {user.progress.lives}</div>
                     <div className={`${styles.statBadge} ${styles.xp}`}><Zap size={14} fill="currentColor" /> {user.progress.xp}</div>

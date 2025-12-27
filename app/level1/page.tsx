@@ -29,16 +29,16 @@ export default function Level1Hub() {
         );
     }
 
-    // Determine which lessons are completed
+    // Determine which lessons are completed (Level 1 has 15 lessons)
     const completedLessons = user.progress.completedLevels
-        .filter(l => l.level >= 1 && l.level <= 10)
+        .filter(l => l.level >= 1 && l.level <= 15)
         .map(l => l.level);
 
     const getNextLesson = () => {
-        for (let i = 1; i <= 10; i++) {
+        for (let i = 1; i <= 15; i++) {
             if (!completedLessons.includes(i)) return i;
         }
-        return 11; // All done
+        return 16; // All done
     };
 
     const nextLesson = getNextLesson();
@@ -73,17 +73,17 @@ export default function Level1Hub() {
                 >
                     <span style={{ fontSize: '4rem' }}>🗣️💻</span>
                     <h1 className={styles.hubTitle}>Level 1: Talk to Your Computer</h1>
-                    <p className={styles.hubSubtitle}>10 lessons to become a Python beginner!</p>
+                    <p className={styles.hubSubtitle}>15 lessons to become a Python beginner!</p>
 
                     {/* Progress */}
                     <div style={{ maxWidth: '400px', margin: '1.5rem auto 0' }}>
                         <div className={styles.progressBar}>
                             <div
                                 className={styles.progressFill}
-                                style={{ width: `${(completedLessons.length / 10) * 100}%` }}
+                                style={{ width: `${(completedLessons.length / 15) * 100}%` }}
                             />
                         </div>
-                        <p className="text-slate-400 text-sm">{completedLessons.length} of 10 lessons complete</p>
+                        <p className="text-slate-400 text-sm">{completedLessons.length} of 15 lessons complete</p>
                     </div>
                 </motion.div>
             </div>
@@ -109,6 +109,7 @@ export default function Level1Hub() {
                                         <div>
                                             <div className={styles.lessonCardNum}>Lesson {lesson.id}</div>
                                             <div className={styles.lessonCardTitle}>{lesson.title}</div>
+                                            <div className={styles.lessonCardSubtitle}>{lesson.subtitle}</div>
                                         </div>
                                     </div>
                                     <span className={styles.lessonCardConcept}>{lesson.concept}</span>
@@ -126,6 +127,7 @@ export default function Level1Hub() {
                                         <div>
                                             <div className={styles.lessonCardNum}>Lesson {lesson.id}</div>
                                             <div className={styles.lessonCardTitle}>{lesson.title}</div>
+                                            <div className={styles.lessonCardSubtitle}>{lesson.subtitle}</div>
                                         </div>
                                     </div>
                                     <span className={styles.lessonCardConcept}>{lesson.concept}</span>
@@ -146,7 +148,7 @@ export default function Level1Hub() {
             </div>
 
             {/* All Complete? */}
-            {completedLessons.length === 10 && (
+            {completedLessons.length === 15 && (
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}

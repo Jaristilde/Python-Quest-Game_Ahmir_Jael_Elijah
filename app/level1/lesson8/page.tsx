@@ -21,6 +21,10 @@ export default function Lesson8() {
     const [quizAnswer, setQuizAnswer] = useState<number | null>(null);
     const [quizChecked, setQuizChecked] = useState(false);
     const [lessonComplete, setLessonComplete] = useState(false);
+    const [superchargeCode, setSuperchargeCode] = useState('');
+    const [superchargeOutput, setSuperchargeOutput] = useState('');
+    const [superchargeDone, setSuperchargeDone] = useState(false);
+    const [superchargeXpClaimed, setSuperchargeXpClaimed] = useState(false);
 
     useEffect(() => {
         if (!isLoading && !user) router.push('/login');
@@ -95,6 +99,67 @@ export default function Lesson8() {
         }
     };
 
+    const runSupercharge = () => {
+        const lines = superchargeCode.trim().split('\n');
+        const variables: { [key: string]: number } = {};
+        let outputLines: string[] = [];
+        let hasIf = false;
+        let hasElif = false;
+        let hasElse = false;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+
+            // Variable assignment
+            const assignMatch = line.match(/^(\w+)\s*=\s*(\d+)$/);
+            if (assignMatch) {
+                variables[assignMatch[1]] = parseInt(assignMatch[2]);
+                continue;
+            }
+
+            if (line.startsWith('if ')) hasIf = true;
+            if (line.startsWith('elif ')) hasElif = true;
+            if (line === 'else:') hasElse = true;
+
+            // Process if/elif/else chain
+            const condMatch = line.match(/^(if|elif)\s+(.+):$/);
+            if (condMatch) {
+                let condition = condMatch[2];
+                for (const [varName, value] of Object.entries(variables)) {
+                    condition = condition.replace(new RegExp(`\\b${varName}\\b`, 'g'), String(value));
+                }
+                try {
+                    const result = eval(condition);
+                    if (result && i + 1 < lines.length) {
+                        const nextLine = lines[i + 1].trim();
+                        const printMatch = nextLine.match(/^print\s*\(["'](.*)["']\)$/);
+                        if (printMatch) outputLines.push(printMatch[1]);
+                    }
+                } catch { /* ignore */ }
+            }
+
+            if (line === 'else:' && i + 1 < lines.length) {
+                const nextLine = lines[i + 1].trim();
+                const printMatch = nextLine.match(/^print\s*\(["'](.*)["']\)$/);
+                if (printMatch) outputLines.push(printMatch[1]);
+            }
+        }
+
+        setSuperchargeOutput(outputLines.length > 0 ? outputLines.join('\n') : 'Run your code!');
+
+        // Check if challenge is complete: must have if, elif, and else
+        if (hasIf && hasElif && hasElse && outputLines.length > 0) {
+            setSuperchargeDone(true);
+        }
+    };
+
+    const claimSuperchargeXp = () => {
+        if (!superchargeXpClaimed && superchargeDone) {
+            addXpAndCoins(25, 0);
+            setSuperchargeXpClaimed(true);
+        }
+    };
+
     if (isLoading || !user) return <div className={styles.container}><div className="flex items-center justify-center h-screen text-slate-400">Loading...</div></div>;
 
     if (lessonComplete) {
@@ -113,7 +178,7 @@ export default function Lesson8() {
         <div className={styles.container}>
             <header className={styles.header}>
                 <Link href="/level1" className={styles.backBtn}><ArrowLeft size={18} /> Back</Link>
-                <span className={styles.lessonInfo}>Lesson {LESSON.id} of 10</span>
+                <span className={styles.lessonInfo}>Lesson {LESSON.id} of 15</span>
                 <div className={styles.stats}>
                     <div className={`${styles.statBadge} ${styles.hearts}`}><Heart size={14} fill="currentColor" /> {user.progress.lives}</div>
                     <div className={`${styles.statBadge} ${styles.xp}`}><Zap size={14} fill="currentColor" /> {user.progress.xp}</div>
@@ -182,6 +247,126 @@ export default function Lesson8() {
                                 <li><div className={styles.challengeCheck}></div>If age is under 13, print "You're a kid!"</li>
                             </ul>
                         </div>
+
+                        {/* SUPERCHARGE Bonus Challenge */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            style={{
+                                background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.25))',
+                                border: '2px solid rgba(251, 191, 36, 0.4)',
+                                borderRadius: 'var(--radius)',
+                                padding: '1.5rem',
+                                marginTop: '2rem'
+                            }}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                                <motion.span
+                                    animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                    style={{ fontSize: '1.5rem' }}
+                                >⚡</motion.span>
+                                <div>
+                                    <h3 style={{ margin: 0, color: '#fbbf24', fontWeight: 800 }}>SUPERCHARGE - Bonus Challenge</h3>
+                                    <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>Optional • +25 XP • Not required to advance</p>
+                                </div>
+                            </div>
+
+                            <div style={{ background: 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1rem' }}>
+                                <p style={{ margin: 0, fontWeight: 600, marginBottom: '0.5rem' }}>🎯 The Challenge: Grade Calculator!</p>
+                                <p style={{ margin: 0 }}>
+                                    Create a program that checks a <strong>score</strong> and prints the grade using <strong>if</strong>, <strong>elif</strong>, AND <strong>else</strong>!
+                                </p>
+                                <ul style={{ margin: '0.75rem 0 0', paddingLeft: '1.25rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                                    <li>90+ = "A - Amazing!"</li>
+                                    <li>80-89 = "B - Great job!"</li>
+                                    <li>Below 80 = "Keep practicing!"</li>
+                                </ul>
+                            </div>
+
+                            <div className={styles.editor}>
+                                <div className={styles.codeHeader}>
+                                    <span>supercharge.py</span>
+                                    <span style={{ color: '#fbbf24' }}>⚡ BONUS</span>
+                                </div>
+                                <textarea
+                                    value={superchargeCode}
+                                    onChange={(e) => setSuperchargeCode(e.target.value)}
+                                    placeholder={'score = 85\n\nif score >= 90:\n    print("A - Amazing!")\nelif score >= 80:\n    print("B - Great job!")\nelse:\n    print("Keep practicing!")'}
+                                    spellCheck={false}
+                                    style={{ minHeight: '180px' }}
+                                />
+                            </div>
+
+                            <button
+                                className={styles.runBtn}
+                                onClick={runSupercharge}
+                                style={{ background: superchargeDone ? '#10b981' : '#f59e0b' }}
+                            >
+                                <Play size={18} /> {superchargeDone ? 'Challenge Complete!' : 'Test Supercharge'}
+                            </button>
+
+                            {superchargeOutput && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className={styles.outputBox}
+                                    style={{ borderColor: superchargeDone ? 'rgba(16, 185, 129, 0.5)' : undefined }}
+                                >
+                                    <div className={styles.outputLabel}>{superchargeDone ? '⚡ SUPERCHARGED!' : '✨ Output:'}</div>
+                                    <div className={styles.outputText}>{superchargeOutput}</div>
+                                </motion.div>
+                            )}
+
+                            {superchargeDone && !superchargeXpClaimed && (
+                                <motion.button
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    onClick={claimSuperchargeXp}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.5rem',
+                                        width: '100%',
+                                        padding: '1rem',
+                                        marginTop: '1rem',
+                                        background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                                        border: 'none',
+                                        borderRadius: 'var(--radius)',
+                                        color: 'white',
+                                        fontWeight: 700,
+                                        fontSize: '1.1rem',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    <Zap size={20} fill="currentColor" /> Claim +25 Bonus XP!
+                                </motion.button>
+                            )}
+
+                            {superchargeXpClaimed && (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.5rem',
+                                        padding: '1rem',
+                                        marginTop: '1rem',
+                                        background: 'rgba(16, 185, 129, 0.2)',
+                                        border: '1px solid rgba(16, 185, 129, 0.4)',
+                                        borderRadius: 'var(--radius)',
+                                        color: '#10b981',
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    <Check size={20} /> +25 XP Claimed! Decision Master! 🧠
+                                </motion.div>
+                            )}
+                        </motion.div>
 
                         <div className={styles.navBar}>
                             <Link href="/level1/lesson7" className={`${styles.navBtn} ${styles.secondary}`}><ChevronLeft size={18} /> Previous</Link>

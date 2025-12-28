@@ -1,15 +1,47 @@
 :root {
-  --primary: #4F46E5;
-  --primary-hover: #4338ca;
-  --secondary: #EC4899;
-  --accent: #F59E0B;
-  --background: #0F172A;
-  --surface: #1E293B;
-  --surface-highlight: #334155;
-  --text: #F8FAFC;
-  --text-muted: #94A3B8;
-  --success: #10B981;
-  --error: #EF4444;
+  /* ===== CANDY LAND THEME ===== */
+
+  /* Backgrounds */
+  --bg-primary: #1E1E2E;      /* Main background - soft charcoal */
+  --bg-card: #2A2A3E;         /* Card/row background - muted purple-gray */
+  --bg-card-hover: #363649;   /* Card hover state */
+  --bg-input: #232334;        /* Code editor background */
+
+  /* Accent Colors */
+  --accent-primary: #FF79C6;  /* Main accent - bubblegum pink */
+  --accent-secondary: #8BE9FD; /* Secondary - sky blue */
+
+  /* Status Colors */
+  --success: #50FA7B;         /* Completed/correct - bright green */
+  --xp-coins: #FFB86C;        /* XP, coins, rewards - orange gold */
+  --error: #FF5555;           /* Wrong answer - soft red */
+  --locked: #6272A4;          /* Locked items - muted blue-gray */
+
+  /* Text Colors */
+  --text-primary: #F8F8F2;    /* Main text - off-white */
+  --text-secondary: #9292A8;  /* Muted text - gray */
+  --text-accent: #FF79C6;     /* Highlighted text - pink */
+
+  /* Borders */
+  --border-default: #44475A;  /* Default borders */
+  --border-active: #FF79C6;   /* Active/selected border - pink */
+
+  /* Badges */
+  --badge-learn: #50FA7B;     /* LEARN badge - green */
+  --badge-practice: #FFB86C;  /* PRACTICE badge - orange */
+  --badge-project: #BD93F9;   /* GUIDED PROJECT badge - soft purple */
+  --badge-supercharge: #F1FA8C; /* SUPERCHARGE - yellow */
+
+  /* Legacy aliases for compatibility */
+  --primary: #FF79C6;
+  --primary-hover: #FF92D0;
+  --secondary: #8BE9FD;
+  --accent: #FFB86C;
+  --background: #1E1E2E;
+  --surface: #2A2A3E;
+  --surface-highlight: #363649;
+  --text: #F8F8F2;
+  --text-muted: #9292A8;
   --radius: 1rem;
   --font-main: 'Outfit', sans-serif;
 }
@@ -21,14 +53,15 @@
 }
 
 body {
-  background-color: var(--background);
-  color: var(--text);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: var(--font-main);
   overflow-x: hidden;
   min-height: 100vh;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
+  background-image:
+    radial-gradient(at 0% 0%, rgba(255, 121, 198, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(139, 233, 253, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(255, 184, 108, 0.08) 0px, transparent 50%);
 }
 
 a {
@@ -44,12 +77,12 @@ a {
 }
 
 .glass-panel {
-  background: rgba(30, 41, 59, 0.7);
+  background: rgba(42, 42, 62, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
 
 .btn {
@@ -67,61 +100,62 @@ a {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), #6366f1);
-  color: white;
-  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+  background: linear-gradient(135deg, var(--accent-primary), #FF92D0);
+  color: #1E1E2E;
+  box-shadow: 0 4px 15px rgba(255, 121, 198, 0.4);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+  box-shadow: 0 6px 20px rgba(255, 121, 198, 0.6);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--bg-card-hover);
+  border-color: var(--accent-primary);
 }
 
 .btn-success {
-  background: linear-gradient(135deg, var(--success), #34d399);
-  color: white;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, var(--success), #69FF94);
+  color: #1E1E2E;
+  box-shadow: 0 4px 15px rgba(80, 250, 123, 0.4);
 }
 
 .title-gradient {
-  background: linear-gradient(to right, #818cf8, #f472b6);
+  background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .code-block {
-  background: #0f172a;
+  background: var(--bg-input);
   padding: 1rem;
   border-radius: 0.5rem;
   font-family: monospace;
-  color: #a5b4fc;
+  color: var(--accent-secondary);
   overflow-x: auto;
-  border: 1px solid #334155;
+  border: 1px solid var(--border-default);
   margin: 1rem 0;
 }
 
 .card {
-  background: var(--surface);
+  background: var(--bg-card);
   border-radius: var(--radius);
   padding: 1.5rem;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid var(--border-default);
 }
 
 input, textarea {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
   padding: 0.75rem;
   border-radius: 0.5rem;
   width: 100%;
@@ -131,8 +165,8 @@ input, textarea {
 
 input:focus, textarea:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(255, 121, 198, 0.3);
 }
 
 /* Animations */
@@ -144,4 +178,23 @@ input:focus, textarea:focus {
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px var(--accent-primary), 0 0 10px var(--accent-primary); }
+  50% { box-shadow: 0 0 10px var(--accent-primary), 0 0 20px var(--accent-primary); }
+}
+
+.glow-effect {
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes xpPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.xp-pop {
+  animation: xpPop 0.3s ease-out;
 }

@@ -2,13 +2,13 @@
 
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Heart, Zap, Lock, Check, ChevronRight, Code, Trophy } from 'lucide-react';
+import { ArrowLeft, Heart, Zap, Lock, Check, ChevronRight, Play, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth, getAvatarEmoji } from '../context/AuthContext';
-import { LEVEL1_LESSONS } from './lessonData';
+import { LEVEL4_LESSONS } from './lessonData';
 
-export default function Level1Hub() {
+export default function Level4Hub() {
     const router = useRouter();
     const { user, isLoading } = useAuth();
 
@@ -26,15 +26,38 @@ export default function Level1Hub() {
         );
     }
 
+    // Check if Level 3 is complete (16 lessons, stored as levels 34-49)
+    const level3Complete = user.progress.completedLevels.filter(l => l.level >= 34 && l.level <= 49).length >= 16;
+
+    if (!level3Complete) {
+        return (
+            <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+                <div style={{ textAlign: 'center' }}>
+                    <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity }} style={{ fontSize: '5rem', marginBottom: '1.5rem' }}>
+                        🔒
+                    </motion.div>
+                    <h1 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.75rem' }}>Level 4 is Locked!</h1>
+                    <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', maxWidth: '300px' }}>
+                        Complete all 16 lessons in Level 3 to unlock Functions!
+                    </p>
+                    <Link href="/level3" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.875rem 1.5rem', background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))', color: '#1E1E2E', textDecoration: 'none', borderRadius: '8px', fontWeight: 600 }}>
+                        <Play size={18} /> Go to Level 3
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
+    // Level 4 lessons are stored as levels 50-62
     const completedLessons = user.progress.completedLevels
-        .filter(l => l.level >= 1 && l.level <= 15)
-        .map(l => l.level);
+        .filter(l => l.level >= 50 && l.level <= 62)
+        .map(l => l.level - 49);
 
     const getNextLesson = () => {
-        for (let i = 1; i <= 15; i++) {
+        for (let i = 1; i <= 13; i++) {
             if (!completedLessons.includes(i)) return i;
         }
-        return 16;
+        return 14;
     };
 
     const nextLesson = getNextLesson();
@@ -96,20 +119,20 @@ export default function Level1Hub() {
             {/* Hero Section */}
             <div style={{ textAlign: 'center', padding: '2rem 1.5rem 1rem' }}>
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🚀💻</div>
-                    <h1 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.25rem' }}>Level 1: Python Basics</h1>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Learn to talk to your computer</p>
+                    <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🔧🍕</div>
+                    <h1 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.25rem' }}>Level 4: Functions</h1>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Build your own commands</p>
 
                     {/* Progress Bar */}
                     <div style={{ maxWidth: '300px', margin: '1.5rem auto 0' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                            <span>{completedLessons.length} of 15 complete</span>
-                            <span>{Math.round((completedLessons.length / 15) * 100)}%</span>
+                            <span>{completedLessons.length} of 13 complete</span>
+                            <span>{Math.round((completedLessons.length / 13) * 100)}%</span>
                         </div>
                         <div style={{ height: '8px', background: 'var(--bg-card)', borderRadius: '9999px', overflow: 'hidden' }}>
                             <motion.div
                                 initial={{ width: 0 }}
-                                animate={{ width: `${(completedLessons.length / 15) * 100}%` }}
+                                animate={{ width: `${(completedLessons.length / 13) * 100}%` }}
                                 transition={{ duration: 0.5 }}
                                 style={{ height: '100%', background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-secondary))', borderRadius: '9999px' }}
                             />
@@ -120,7 +143,7 @@ export default function Level1Hub() {
 
             {/* Lesson List */}
             <div style={{ maxWidth: '600px', margin: '0 auto', padding: '1rem 1rem 3rem' }}>
-                {LEVEL1_LESSONS.map((lesson, idx) => {
+                {LEVEL4_LESSONS.map((lesson, idx) => {
                     const isCompleted = completedLessons.includes(lesson.id);
                     const isLocked = lesson.id > nextLesson;
                     const isCurrent = lesson.id === nextLesson;
@@ -133,7 +156,6 @@ export default function Level1Hub() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.03 }}
                         >
-                            {/* Main Lesson Row */}
                             {isLocked ? (
                                 <div style={{
                                     display: 'flex',
@@ -157,7 +179,7 @@ export default function Level1Hub() {
                                 </div>
                             ) : (
                                 <Link
-                                    href={`/level1/lesson${lesson.id}`}
+                                    href={`/level4/lesson${lesson.id}`}
                                     style={{
                                         display: 'flex',
                                         alignItems: 'center',
@@ -207,7 +229,7 @@ export default function Level1Hub() {
                                 </Link>
                             )}
 
-                            {/* SUPERCHARGE Row (after practice lessons) */}
+                            {/* SUPERCHARGE Row */}
                             {lesson.hasSupercharge && (
                                 <div style={{
                                     display: 'flex',
@@ -236,14 +258,14 @@ export default function Level1Hub() {
                 })}
 
                 {/* Level Complete Button */}
-                {completedLessons.length === 15 && (
+                {completedLessons.length === 13 && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         style={{ marginTop: '2rem', textAlign: 'center' }}
                     >
                         <Link
-                            href="/level1/complete"
+                            href="/level4/complete"
                             style={{
                                 display: 'inline-flex',
                                 alignItems: 'center',
@@ -259,7 +281,7 @@ export default function Level1Hub() {
                             }}
                         >
                             <Trophy size={20} />
-                            View Level 1 Badge!
+                            View Level 4 Badge!
                             <ChevronRight size={20} />
                         </Link>
                     </motion.div>

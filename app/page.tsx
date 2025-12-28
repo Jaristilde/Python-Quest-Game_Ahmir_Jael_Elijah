@@ -150,6 +150,10 @@ export default function Home() {
                 const level1Complete = level1Completed.length >= 15;
                 const level2Completed = user.progress.completedLevels.filter(l => l.level >= 16 && l.level <= 33);
                 const level2Complete = level2Completed.length >= 18;
+                const level3Completed = user.progress.completedLevels.filter(l => l.level >= 34 && l.level <= 49);
+                const level3Complete = level3Completed.length >= 16;
+                const level4Completed = user.progress.completedLevels.filter(l => l.level >= 50 && l.level <= 62);
+                const level4Complete = level4Completed.length >= 13;
 
                 return (
                   <>
@@ -182,7 +186,7 @@ export default function Home() {
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Level 1: Code Rookie</span>
-                          {level1Complete && <Check size={18} className="text-emerald-400" />}
+                          {level1Complete && <Check size={18} style={{ color: 'var(--success)' }} />}
                         </div>
                         <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                           {level1Complete ? '15/15 Complete!' : `${level1Completed.length}/15 Lessons`}
@@ -190,14 +194,14 @@ export default function Home() {
                         <div style={{
                           marginTop: '0.5rem',
                           height: '4px',
-                          background: 'rgba(255,255,255,0.1)',
+                          background: 'var(--bg-card)',
                           borderRadius: '2px',
                           overflow: 'hidden'
                         }}>
                           <div style={{
                             width: `${(level1Completed.length / 15) * 100}%`,
                             height: '100%',
-                            background: 'linear-gradient(90deg, #a855f7, #ec4899)',
+                            background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-secondary))',
                             transition: 'width 0.3s ease'
                           }} />
                         </div>
@@ -216,8 +220,8 @@ export default function Home() {
                           alignItems: 'center',
                           gap: '1rem',
                           textDecoration: 'none',
-                          border: level2Complete ? '2px solid rgba(16, 185, 129, 0.5)' : '1px solid rgba(245, 158, 11, 0.3)',
-                          background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(236, 72, 153, 0.05))',
+                          border: level2Complete ? '2px solid var(--success)' : '1px solid rgba(255, 184, 108, 0.3)',
+                          background: 'linear-gradient(135deg, rgba(255, 184, 108, 0.05), rgba(255, 121, 198, 0.05))',
                           transition: 'all 0.2s ease'
                         }}
                       >
@@ -225,7 +229,7 @@ export default function Home() {
                           width: '60px',
                           height: '60px',
                           borderRadius: '12px',
-                          background: 'linear-gradient(135deg, #f59e0b, #ec4899)',
+                          background: 'linear-gradient(135deg, var(--xp-coins), var(--accent-primary))',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -236,7 +240,7 @@ export default function Home() {
                         <div style={{ flex: 1 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Level 2: Math Ninja</span>
-                            {level2Complete ? <Check size={18} className="text-emerald-400" /> : <span style={{ fontSize: '0.75rem', background: 'linear-gradient(135deg, #10b981, #3b82f6)', padding: '2px 8px', borderRadius: '10px', fontWeight: 600 }}>NEW!</span>}
+                            {level2Complete ? <Check size={18} style={{ color: 'var(--success)' }} /> : <span style={{ fontSize: '0.75rem', background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))', padding: '2px 8px', borderRadius: '10px', fontWeight: 600, color: '#1E1E2E' }}>NEW!</span>}
                           </div>
                           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                             {level2Complete ? '18/18 Complete!' : `${level2Completed.length}/18 Lessons`}
@@ -244,14 +248,14 @@ export default function Home() {
                           <div style={{
                             marginTop: '0.5rem',
                             height: '4px',
-                            background: 'rgba(255,255,255,0.1)',
+                            background: 'var(--bg-card)',
                             borderRadius: '2px',
                             overflow: 'hidden'
                           }}>
                             <div style={{
                               width: `${(level2Completed.length / 18) * 100}%`,
                               height: '100%',
-                              background: 'linear-gradient(90deg, #f59e0b, #ec4899)',
+                              background: 'linear-gradient(90deg, var(--xp-coins), var(--accent-primary))',
                               transition: 'width 0.3s ease'
                             }} />
                           </div>
@@ -294,6 +298,186 @@ export default function Home() {
                         <Lock size={20} style={{ color: 'var(--text-muted)' }} />
                       </div>
                     )}
+
+                    {/* Level 3 Card */}
+                    {level2Complete ? (
+                      <Link
+                        href="/level3"
+                        className="glass-panel"
+                        style={{
+                          padding: '1.25rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '1rem',
+                          textDecoration: 'none',
+                          border: level3Complete ? '2px solid var(--success)' : '1px solid rgba(80, 250, 123, 0.3)',
+                          background: 'linear-gradient(135deg, rgba(80, 250, 123, 0.05), rgba(139, 233, 253, 0.05))',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <div style={{
+                          width: '60px',
+                          height: '60px',
+                          borderRadius: '12px',
+                          background: 'linear-gradient(135deg, var(--success), var(--accent-secondary))',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.75rem'
+                        }}>
+                          📦
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Level 3: Lists</span>
+                            {level3Complete ? <Check size={18} style={{ color: 'var(--success)' }} /> : <span style={{ fontSize: '0.75rem', background: 'linear-gradient(135deg, var(--success), var(--accent-secondary))', padding: '2px 8px', borderRadius: '10px', fontWeight: 600, color: '#1E1E2E' }}>NEW!</span>}
+                          </div>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                            {level3Complete ? '16/16 Complete!' : `${level3Completed.length}/16 Lessons`}
+                          </div>
+                          <div style={{
+                            marginTop: '0.5rem',
+                            height: '4px',
+                            background: 'var(--bg-card)',
+                            borderRadius: '2px',
+                            overflow: 'hidden'
+                          }}>
+                            <div style={{
+                              width: `${(level3Completed.length / 16) * 100}%`,
+                              height: '100%',
+                              background: 'linear-gradient(90deg, var(--success), var(--accent-secondary))',
+                              transition: 'width 0.3s ease'
+                            }} />
+                          </div>
+                        </div>
+                        <ChevronRight size={20} style={{ color: 'var(--text-muted)' }} />
+                      </Link>
+                    ) : level1Complete ? (
+                      <div
+                        className="glass-panel"
+                        style={{
+                          padding: '1.25rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '1rem',
+                          opacity: 0.6,
+                          cursor: 'not-allowed',
+                          border: '1px solid rgba(255,255,255,0.05)'
+                        }}
+                      >
+                        <div style={{
+                          width: '60px',
+                          height: '60px',
+                          borderRadius: '12px',
+                          background: 'rgba(100, 100, 100, 0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.75rem'
+                        }}>
+                          🔒
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-muted)' }}>Level 3: Lists</span>
+                          </div>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                            Complete Level 2 to unlock!
+                          </div>
+                        </div>
+                        <Lock size={20} style={{ color: 'var(--text-muted)' }} />
+                      </div>
+                    ) : null}
+
+                    {/* Level 4 Card */}
+                    {level3Complete ? (
+                      <Link
+                        href="/level4"
+                        className="glass-panel"
+                        style={{
+                          padding: '1.25rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '1rem',
+                          textDecoration: 'none',
+                          border: level4Complete ? '2px solid var(--success)' : '1px solid rgba(189, 147, 249, 0.3)',
+                          background: 'linear-gradient(135deg, rgba(189, 147, 249, 0.05), rgba(255, 121, 198, 0.05))',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <div style={{
+                          width: '60px',
+                          height: '60px',
+                          borderRadius: '12px',
+                          background: 'linear-gradient(135deg, var(--badge-project), var(--accent-primary))',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.75rem'
+                        }}>
+                          🔧
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Level 4: Functions</span>
+                            {level4Complete ? <Check size={18} style={{ color: 'var(--success)' }} /> : <span style={{ fontSize: '0.75rem', background: 'linear-gradient(135deg, var(--badge-project), var(--accent-primary))', padding: '2px 8px', borderRadius: '10px', fontWeight: 600, color: '#1E1E2E' }}>NEW!</span>}
+                          </div>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                            {level4Complete ? '13/13 Complete!' : `${level4Completed.length}/13 Lessons`}
+                          </div>
+                          <div style={{
+                            marginTop: '0.5rem',
+                            height: '4px',
+                            background: 'var(--bg-card)',
+                            borderRadius: '2px',
+                            overflow: 'hidden'
+                          }}>
+                            <div style={{
+                              width: `${(level4Completed.length / 13) * 100}%`,
+                              height: '100%',
+                              background: 'linear-gradient(90deg, var(--badge-project), var(--accent-primary))',
+                              transition: 'width 0.3s ease'
+                            }} />
+                          </div>
+                        </div>
+                        <ChevronRight size={20} style={{ color: 'var(--text-muted)' }} />
+                      </Link>
+                    ) : level2Complete ? (
+                      <div
+                        className="glass-panel"
+                        style={{
+                          padding: '1.25rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '1rem',
+                          opacity: 0.6,
+                          cursor: 'not-allowed',
+                          border: '1px solid rgba(255,255,255,0.05)'
+                        }}
+                      >
+                        <div style={{
+                          width: '60px',
+                          height: '60px',
+                          borderRadius: '12px',
+                          background: 'rgba(100, 100, 100, 0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.75rem'
+                        }}>
+                          🔒
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-muted)' }}>Level 4: Functions</span>
+                          </div>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                            Complete Level 3 to unlock!
+                          </div>
+                        </div>
+                        <Lock size={20} style={{ color: 'var(--text-muted)' }} />
+                      </div>
+                    ) : null}
                   </>
                 );
               })()}

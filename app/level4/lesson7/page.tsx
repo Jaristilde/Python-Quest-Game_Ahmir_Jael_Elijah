@@ -374,7 +374,7 @@ def calculate_total(pizza_price, drink_count):
 greet_customer("Alex")
 show_menu()
 order_total = calculate_total(10, 2)
-print(f"Your total is: ${order_total}")
+print(f"Your total is: \${order_total}")
 `);
         }
     };

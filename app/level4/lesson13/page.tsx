@@ -84,7 +84,7 @@ export default function Lesson13() {
     show_menu()
     order = take_order()
     price = get_price(order)
-    print(f"That will be ${price}")
+    print(f"That will be \${price}")
     print("Thank you for your order!")`,
             explanation: 'This main function calls ALL our other functions in the right order! It greets, shows menu, takes order, gets price, and thanks the customer!',
             action: () => {

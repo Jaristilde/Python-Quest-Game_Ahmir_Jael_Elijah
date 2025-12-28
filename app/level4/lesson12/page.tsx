@@ -134,7 +134,7 @@ export default function Lesson12() {
                     if (compMatch) {
                         const left = localVars[compMatch[1]] !== undefined ? localVars[compMatch[1]] : compMatch[1];
                         const op = compMatch[2];
-                        let right = compMatch[3].trim();
+                        let right: string | number = compMatch[3].trim();
                         if (right.startsWith('"') || right.startsWith("'")) {
                             right = right.slice(1, -1);
                         } else if (!isNaN(Number(right))) {

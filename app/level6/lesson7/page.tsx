@@ -346,7 +346,7 @@ print(pretty_json)
                                         Converts JSON text into a Python dictionary
                                     </p>
                                     <code style={{ fontSize: '0.85rem', color: '#50fa7b' }}>
-                                        data = json.loads('{"name": "Hero"}')
+                                        {`data = json.loads('{"name": "Hero"}')`}
                                     </code>
                                 </motion.div>
 

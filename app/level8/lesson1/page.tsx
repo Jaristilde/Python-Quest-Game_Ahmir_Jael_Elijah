@@ -47,7 +47,7 @@ print("I created another pet!")
             outputLines.push("<class '__main__.Pet'>");
             setHasCreatedPet(true);
 
-            if (code.includes('friend_pet') || code.match(/\w+\s*=\s*Pet\(\)/g)?.length >= 2) {
+            if (code.includes('friend_pet') || (code.match(/\w+\s*=\s*Pet\(\)/g) || []).length >= 2) {
                 outputLines.push('I created another pet!');
                 setHasCreatedTwo(true);
             }

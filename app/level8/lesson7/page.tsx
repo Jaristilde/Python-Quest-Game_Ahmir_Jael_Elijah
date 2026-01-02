@@ -92,7 +92,7 @@ my_pet.status()
         if (code.includes('.play()')) {
             outputLines.push("Buddy played! Happiness: 80");
         }
-        if (code.includes('.status()') && code.match(/\.status\(\)/g)?.length >= 2) {
+        if (code.includes('.status()') && (code.match(/\.status\(\)/g) || []).length >= 2) {
             outputLines.push("--- Buddy's Status ---");
             outputLines.push("Species: Dog");
             outputLines.push("Hunger: 30/100");

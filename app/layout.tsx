@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
+import ClientLayout from "./components/ClientLayout";
 
 export const metadata: Metadata = {
   title: "Python Adventure Quest",
@@ -21,7 +22,9 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning>
         <AuthProvider>
-          {children}
+          <ClientLayout>
+            {children}
+          </ClientLayout>
         </AuthProvider>
       </body>
     </html>

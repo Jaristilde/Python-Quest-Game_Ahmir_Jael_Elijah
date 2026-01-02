@@ -198,3 +198,150 @@ input:focus, textarea:focus {
 .xp-pop {
   animation: xpPop 0.3s ease-out;
 }
+
+/* ===== KID-FRIENDLY ERROR ANIMATIONS ===== */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.kid-error-container {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* ===== SUCCESS CELEBRATION ANIMATIONS ===== */
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes robotBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes starPop {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes rewardPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes celebrate {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.1) rotate(-5deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
+  75% { transform: scale(1.1) rotate(-5deg); }
+  100% { transform: scale(1); }
+}
+
+.celebrate {
+  animation: celebrate 0.6s ease-in-out;
+}
+
+/* ===== PASSWORD STRENGTH INDICATOR ===== */
+@keyframes strengthPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.strength-indicator {
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* ===== BUTTON HOVER EFFECTS ===== */
+@keyframes buttonGlow {
+  0% {
+    box-shadow: 0 0 5px var(--accent-primary);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--accent-primary), 0 0 40px var(--accent-primary);
+  }
+  100% {
+    box-shadow: 0 0 5px var(--accent-primary);
+  }
+}
+
+.btn-glow:hover {
+  animation: buttonGlow 1.5s ease-in-out infinite;
+}
+
+/* ===== LOADING SPINNER ===== */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* ===== FADE IN ANIMATION ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ===== PULSE ANIMATION ===== */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}

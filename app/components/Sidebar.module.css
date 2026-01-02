@@ -1,0 +1,345 @@
+/* Sidebar Toggle Button */
+.toggleButton {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1E1E2E, #2A2A3E);
+  border: 1px solid #44475A;
+  color: #FF79C6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.toggleButton:hover {
+  background: linear-gradient(135deg, #2A2A3E, #363649);
+  transform: scale(1.05);
+  border-color: #FF79C6;
+}
+
+/* Backdrop for mobile */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  backdrop-filter: blur(4px);
+}
+
+/* Main Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 280px;
+  background: #1E1E2E;
+  border-right: 1px solid #44475A;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Spacer for desktop layout */
+.sidebarSpacer {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #44475A;
+  background: linear-gradient(135deg, #1E1E2E, #252535);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logoEmoji {
+  font-size: 1.5rem;
+}
+
+.logoText {
+  font-size: 1rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF79C6, #BD93F9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.5px;
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: #6272A4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: #363649;
+  color: #F8F8F2;
+}
+
+/* User Progress Section */
+.userProgress {
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(189, 147, 249, 0.1), rgba(255, 121, 198, 0.1));
+}
+
+.rankBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #FFB86C;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.progressBar {
+  height: 8px;
+  background: #2A2A3E;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #50FA7B, #8BE9FD);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #8BE9FD;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: #44475A;
+  margin: 0;
+}
+
+/* Levels Section */
+.levelsSection {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.sectionTitle {
+  padding: 0 1.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #6272A4;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.levelsList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Level Item Styles */
+.levelItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  text-decoration: none;
+  color: #F8F8F2;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  background: transparent;
+}
+
+.levelItem:hover:not(.locked) {
+  background: #363649;
+}
+
+.levelItem.current {
+  background: rgba(255, 121, 198, 0.15);
+  border-left-color: #FF79C6;
+}
+
+.levelItem.complete {
+  background: rgba(80, 250, 123, 0.05);
+}
+
+.levelItem.complete:hover {
+  background: rgba(80, 250, 123, 0.1);
+}
+
+.levelItem.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.levelNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #2A2A3E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6272A4;
+  flex-shrink: 0;
+}
+
+.levelItem.current .levelNumber {
+  background: #FF79C6;
+  color: #1E1E2E;
+}
+
+.levelItem.complete .levelNumber {
+  background: #50FA7B;
+  color: #1E1E2E;
+}
+
+.levelInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.levelName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #F8F8F2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.levelItem.locked .levelName {
+  color: #6272A4;
+}
+
+.levelProgress {
+  font-size: 0.7rem;
+  color: #6272A4;
+}
+
+.levelItem.current .levelProgress {
+  color: #FF79C6;
+}
+
+.levelItem.complete .levelProgress {
+  color: #50FA7B;
+}
+
+.lockIcon {
+  color: #6272A4;
+  flex-shrink: 0;
+}
+
+.checkIcon {
+  color: #1E1E2E;
+}
+
+.completeIcon {
+  color: #50FA7B;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #44475A;
+  background: linear-gradient(135deg, #1E1E2E, #252535);
+}
+
+.xpBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, rgba(189, 147, 249, 0.2), rgba(255, 121, 198, 0.2));
+  border-radius: 20px;
+  color: #BD93F9;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* Scrollbar Styling */
+.levelsSection::-webkit-scrollbar {
+  width: 6px;
+}
+
+.levelsSection::-webkit-scrollbar-track {
+  background: #1E1E2E;
+}
+
+.levelsSection::-webkit-scrollbar-thumb {
+  background: #44475A;
+  border-radius: 3px;
+}
+
+.levelsSection::-webkit-scrollbar-thumb:hover {
+  background: #6272A4;
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+  .sidebar {
+    width: 300px;
+  }
+
+  .sidebarSpacer {
+    display: none;
+  }
+
+  .toggleButton {
+    top: 0.75rem;
+    left: 0.75rem;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sidebar {
+    width: 260px;
+  }
+
+  .sidebarSpacer {
+    width: 260px;
+  }
+}

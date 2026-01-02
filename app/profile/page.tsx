@@ -28,9 +28,10 @@ export default function ProfilePage() {
         );
     }
 
-    const totalLevels = 14;
+    // Total lessons across all levels: Level 1 (15) + Level 2 (18) + Level 3 (16) + Level 4 (13) = 62
+    const totalLessons = 62;
     const completedCount = user.progress.completedLevels.length;
-    const progressPercent = Math.round((completedCount / totalLevels) * 100);
+    const progressPercent = Math.round((completedCount / totalLessons) * 100);
 
     const formatDate = (dateStr: string) => {
         return new Date(dateStr).toLocaleDateString('en-US', {
@@ -144,7 +145,7 @@ export default function ProfilePage() {
                         />
                     </div>
                     <div className={styles.progressText}>
-                        {completedCount} / {totalLevels} levels completed ({progressPercent}%)
+                        {completedCount} / {totalLessons} lessons completed ({progressPercent}%)
                     </div>
 
                     <div className={styles.timeStats}>

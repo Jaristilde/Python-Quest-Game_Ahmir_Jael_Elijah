@@ -1,12 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Heart, Zap, Play, ChevronRight, ChevronLeft, Check, Lightbulb, Sparkles, Bot } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth, getAvatarEmoji } from '../../context/AuthContext';
 import { LEVEL1_LESSONS } from '../lessonData';
+import { detectKidFriendlyError, KidFriendlyError } from '../../utils/errorDetector';
+import KidFriendlyErrorComponent from '../../components/KidFriendlyError';
+import SuccessCelebration from '../../components/SuccessCelebration';
+import { getRandomCelebration } from '../../utils/celebrationMessages';
 import styles from '../lessons.module.css';
 
 const LESSON = LEVEL1_LESSONS[0]; // Lesson 1
@@ -22,6 +26,23 @@ export default function Lesson1() {
     const [quizChecked, setQuizChecked] = useState(false);
     const [lessonComplete, setLessonComplete] = useState(false);
     const [challengesDone, setChallengesDone] = useState<boolean[]>([false, false, false]);
+    const [kidError, setKidError] = useState<KidFriendlyError | null>(null);
+    const [showCelebration, setShowCelebration] = useState(false);
+    const [celebrationData, setCelebrationData] = useState({ message: '', subMessage: '' });
+    const editorRef = useRef<HTMLTextAreaElement>(null);
+
+    // Reset all state when lesson loads/reloads (fixes navigation back bug)
+    useEffect(() => {
+        setCode('');
+        setOutput('');
+        setShowQuiz(false);
+        setQuizAnswer(null);
+        setQuizChecked(false);
+        setKidError(null);
+        setShowCelebration(false);
+        setCelebrationData({ message: '', subMessage: '' });
+        // Don't reset challengesDone or lessonComplete - those should persist
+    }, []);
 
     useEffect(() => {
         if (!isLoading && !user) {
@@ -29,8 +50,26 @@ export default function Lesson1() {
         }
     }, [user, isLoading, router]);
 
+    // Clear previous results when code changes (user starts typing new code)
+    const handleCodeChange = (newCode: string) => {
+        setCode(newCode);
+        // Clear previous success/error when user modifies code
+        if (showCelebration || kidError || output) {
+            setShowCelebration(false);
+            setKidError(null);
+            setOutput('');
+        }
+    };
+
     const runCode = () => {
         const trimmed = code.trim();
+
+        // Always clear previous state before evaluating
+        setKidError(null);
+        setOutput('');
+        setShowCelebration(false);
+
+        // More flexible regex that handles apostrophes inside double quotes
         const printMatch = trimmed.match(/^print\s*\(["'](.*)["']\)$/);
 
         if (printMatch) {
@@ -49,19 +88,44 @@ export default function Lesson1() {
                 newChallenges[2] = true;
             }
             setChallengesDone(newChallenges);
-        } else if (trimmed.startsWith('print')) {
-            if (!trimmed.includes('(') || !trimmed.includes(')')) {
-                setOutput('Oops! You need parentheses () after print');
-            } else if (!trimmed.includes('"') && !trimmed.includes("'")) {
-                setOutput('Oops! Put your message inside quotes "" ');
-            } else {
-                setOutput('Almost! Check your quotes and parentheses');
-            }
+
+            // Show celebration for successful code execution!
+            const celebration = getRandomCelebration();
+            setCelebrationData(celebration);
+            setShowCelebration(true);
         } else if (trimmed === '') {
             setOutput('Type some code and click Run!');
         } else {
-            setOutput('Hint: Start with the word print');
+            // Determine the error type and show kid-friendly message
+            let errorMessage = '';
+
+            if (!trimmed.toLowerCase().startsWith('print')) {
+                errorMessage = 'invalid syntax';
+            } else if (!trimmed.includes('(') || !trimmed.includes(')')) {
+                errorMessage = 'unexpected eof';
+            } else if (!trimmed.includes('"') && !trimmed.includes("'")) {
+                errorMessage = 'name error not defined';
+            } else {
+                errorMessage = 'syntaxerror';
+            }
+
+            const friendlyError = detectKidFriendlyError(trimmed, errorMessage);
+            setKidError(friendlyError);
+            setOutput('');
         }
+    };
+
+    const handleTryAgain = () => {
+        setKidError(null);
+        setOutput('');
+        // Focus the editor
+        if (editorRef.current) {
+            editorRef.current.focus();
+        }
+    };
+
+    const handleCelebrationContinue = () => {
+        setShowCelebration(false);
     };
 
     const checkQuiz = () => {
@@ -275,8 +339,9 @@ export default function Lesson1() {
                                     <span>Python</span>
                                 </div>
                                 <textarea
+                                    ref={editorRef}
                                     value={code}
-                                    onChange={(e) => setCode(e.target.value)}
+                                    onChange={(e) => handleCodeChange(e.target.value)}
                                     placeholder='print("Hello, I am Robo-1!")'
                                     spellCheck={false}
                                 />
@@ -285,16 +350,29 @@ export default function Lesson1() {
                                 <Play size={18} /> Run Code
                             </button>
 
-                            {output && (
+                            {/* Kid-Friendly Error Display */}
+                            {kidError && (
+                                <KidFriendlyErrorComponent
+                                    title={kidError.title}
+                                    explanation={kidError.explanation}
+                                    tip={kidError.tip}
+                                    emoji={kidError.emoji}
+                                    onTryAgain={handleTryAgain}
+                                />
+                            )}
+
+                            {/* Success Output */}
+                            {output && !kidError && (
                                 <motion.div
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     className={styles.outputBox}
+                                    style={{ borderColor: '#50FA7B' }}
                                 >
-                                    <div className={styles.outputLabel}>
-                                        {output.includes('Oops') || output.includes('Hint') || output.includes('Almost') ? '❌ Error:' : '🤖 Robo-1 says:'}
+                                    <div className={styles.outputLabel} style={{ color: '#50FA7B' }}>
+                                        Robo-1 says:
                                     </div>
-                                    <div className={`${styles.outputText} ${output.includes('Oops') || output.includes('Hint') || output.includes('Almost') ? 'error' : ''}`}>
+                                    <div className={styles.outputText}>
                                         {output}
                                     </div>
                                 </motion.div>
@@ -426,6 +504,17 @@ export default function Lesson1() {
                     </motion.div>
                 )}
             </div>
+
+            {/* Success Celebration Popup */}
+            {showCelebration && (
+                <SuccessCelebration
+                    message={celebrationData.message}
+                    subMessage={celebrationData.subMessage}
+                    xpEarned={5}
+                    coinsEarned={2}
+                    onContinue={handleCelebrationContinue}
+                />
+            )}
         </div>
     );
 }

@@ -85,21 +85,47 @@ export default function Home() {
         >
           {user ? (
             <>
-              {/* Calculate which game level (1, 2, etc.) user should be on */}
+              {/* Calculate which game level (1, 2, 3, or 4) user should be on */}
               {(() => {
-                // Level 1 has lessons 1-15. If all completed, show Level 2
-                const level1Complete = user.progress.completedLevels.filter(l => l.level >= 1 && l.level <= 15).length === 15;
-                const gameLevel = level1Complete ? 2 : 1;
+                const level1Complete = user.progress.completedLevels.filter(l => l.level >= 1 && l.level <= 15).length >= 15;
+                const level2Complete = user.progress.completedLevels.filter(l => l.level >= 16 && l.level <= 33).length >= 18;
+                const level3Complete = user.progress.completedLevels.filter(l => l.level >= 34 && l.level <= 49).length >= 16;
+                const level4Complete = user.progress.completedLevels.filter(l => l.level >= 50 && l.level <= 62).length >= 13;
                 const isNewUser = user.progress.completedLevels.length === 0;
+
+                // Determine current game level and appropriate link
+                let gameLevel = 1;
+                let levelHref = '/level1';
+                let buttonText = 'Continue Level 1';
+
+                if (level4Complete) {
+                  gameLevel = 4;
+                  levelHref = '/level4';
+                  buttonText = 'Review Level 4';
+                } else if (level3Complete) {
+                  gameLevel = 4;
+                  levelHref = '/level4';
+                  buttonText = 'Continue to Level 4';
+                } else if (level2Complete) {
+                  gameLevel = 3;
+                  levelHref = '/level3';
+                  buttonText = 'Continue to Level 3';
+                } else if (level1Complete) {
+                  gameLevel = 2;
+                  levelHref = '/level2';
+                  buttonText = 'Continue to Level 2';
+                } else if (isNewUser) {
+                  buttonText = 'Start Level 1';
+                }
 
                 return (
                   <Link
-                    href={gameLevel === 2 ? '/level2' : '/level1'}
+                    href={levelHref}
                     className="btn btn-primary"
                     style={{ fontSize: '1.25rem', padding: '1rem 2rem' }}
                   >
                     <Play size={24} fill="currentColor" />
-                    {isNewUser ? 'Start Level 1' : gameLevel === 2 ? 'Continue to Level 2' : 'Continue Level 1'}
+                    {buttonText}
                   </Link>
                 );
               })()}

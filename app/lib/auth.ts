@@ -45,7 +45,7 @@ export const AVATARS = [
 ];
 
 export const MAX_USERS = 15;
-export const TEACHER_PASSWORD = 'teacher2024';
+export const TEACHER_PASSWORD = 'Jaristilde';
 
 const STORAGE_KEY = 'python_quest_data';
 
@@ -284,4 +284,271 @@ export function getLeaderboard(): { username: string; avatar: string; xp: number
 
 export function getAvatarEmoji(avatarId: string): string {
     return AVATARS.find(a => a.id === avatarId)?.emoji || '👤';
+}
+
+// ============================================
+// ENHANCEMENT: Password Validation & Auth Errors
+// ============================================
+
+export interface PasswordValidation {
+    isValid: boolean;
+    error?: string;
+    suggestions?: string[];
+    strength: 'weak' | 'medium' | 'strong';
+}
+
+export function validatePassword(password: string): PasswordValidation {
+    const suggestions: string[] = [];
+    let strength: 'weak' | 'medium' | 'strong' = 'weak';
+    let score = 0;
+
+    // Match signup requirement: minimum 4 characters (kid-friendly)
+    if (password.length < 4) {
+        suggestions.push('Make it at least 4 characters long');
+    } else {
+        score += 1;
+        if (password.length >= 6) score += 1; // Bonus for longer passwords
+    }
+
+    if (!/[A-Za-z]/.test(password)) {
+        suggestions.push('Add a letter (a, b, c...)');
+    } else {
+        score += 1;
+    }
+
+    if (!/\d/.test(password)) {
+        suggestions.push('Add a number (1, 2, 3...)');
+    } else {
+        score += 1;
+    }
+
+    // Determine strength
+    if (score >= 4) {
+        strength = 'strong';
+    } else if (score >= 2) {
+        strength = 'medium';
+    } else {
+        strength = 'weak';
+    }
+
+    // For kids, we only require length >= 4 (matching signup validation)
+    const isValid = password.length >= 4;
+
+    if (!isValid) {
+        return {
+            isValid: false,
+            error: 'PASSWORD_WEAK',
+            suggestions: suggestions.slice(0, 3),
+            strength
+        };
+    }
+
+    return { isValid: true, strength, suggestions: [] };
+}
+
+export interface KidFriendlyAuthError {
+    title: string;
+    message: string;
+    action: string;
+    showForgotPassword?: boolean;
+}
+
+export function getAuthErrorMessage(errorCode: string): KidFriendlyAuthError {
+    switch (errorCode) {
+        case 'USERNAME_EXISTS':
+            return {
+                title: 'Welcome back!',
+                message: 'This username already has an account. Looks like you\'ve played before!',
+                action: 'Try logging in instead of signing up.'
+            };
+        case 'USERNAME_NOT_FOUND':
+            return {
+                title: 'Hmm, we don\'t recognize that username',
+                message: 'We couldn\'t find an account with that username.',
+                action: 'Double-check your username or sign up for a new account!'
+            };
+        case 'WRONG_PASSWORD':
+            return {
+                title: 'Oops, wrong password!',
+                message: 'That password doesn\'t match. Don\'t worry, it happens to everyone!',
+                action: 'Try again or click "Forgot Password" if you need help.',
+                showForgotPassword: true
+            };
+        case 'PASSWORD_WEAK':
+            return {
+                title: 'Let\'s make your password stronger!',
+                message: 'Your password needs a little boost to keep your account safe.',
+                action: 'Check the suggestions below.'
+            };
+        case 'ALL_SPOTS_TAKEN':
+            return {
+                title: 'All spots are taken!',
+                message: 'The classroom is full right now.',
+                action: 'Ask your teacher to add more spots.'
+            };
+        case 'USERNAME_TOO_SHORT':
+            return {
+                title: 'Username is too short!',
+                message: 'Your username needs to be at least 2 characters.',
+                action: 'Try a longer username.'
+            };
+        default:
+            return {
+                title: 'Something went wrong',
+                message: 'We hit a small bump. Let\'s try that again!',
+                action: 'Please try again in a moment.'
+            };
+    }
+}
+
+// Password reset functionality
+const RESET_STORAGE_KEY = 'python_quest_password_resets';
+
+interface PasswordReset {
+    username: string;
+    code: string;
+    expires: number;
+}
+
+function getPasswordResets(): PasswordReset[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem(RESET_STORAGE_KEY);
+    if (!stored) return [];
+    try {
+        return JSON.parse(stored);
+    } catch {
+        return [];
+    }
+}
+
+function savePasswordResets(resets: PasswordReset[]): void {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(RESET_STORAGE_KEY, JSON.stringify(resets));
+}
+
+export function initiatePasswordReset(username: string): { success: boolean; code?: string; error?: string } {
+    const data = getAppData();
+    const user = data.users.find(u => u.username.toLowerCase() === username.toLowerCase());
+
+    if (!user) {
+        return { success: false, error: 'USERNAME_NOT_FOUND' };
+    }
+
+    // Generate a simple 6-digit code
+    const code = Math.random().toString().slice(2, 8);
+    const expires = Date.now() + 3600000; // 1 hour
+
+    // Store the reset request
+    const resets = getPasswordResets();
+    const existingIndex = resets.findIndex(r => r.username.toLowerCase() === username.toLowerCase());
+
+    if (existingIndex >= 0) {
+        resets[existingIndex] = { username: username.toLowerCase(), code, expires };
+    } else {
+        resets.push({ username: username.toLowerCase(), code, expires });
+    }
+
+    savePasswordResets(resets);
+
+    // In a real app, this code would be sent via email
+    // For demo, we return it directly
+    return { success: true, code };
+}
+
+export function verifyResetCode(username: string, code: string): { success: boolean; error?: string } {
+    const resets = getPasswordResets();
+    const reset = resets.find(r => r.username.toLowerCase() === username.toLowerCase());
+
+    if (!reset) {
+        return { success: false, error: 'No reset request found. Please request a new code.' };
+    }
+
+    if (Date.now() > reset.expires) {
+        return { success: false, error: 'This code has expired. Please request a new one.' };
+    }
+
+    if (reset.code !== code) {
+        return { success: false, error: 'That code doesn\'t match. Check your code and try again!' };
+    }
+
+    return { success: true };
+}
+
+// Unlock all levels for testing purposes
+export function unlockAllLevels(): void {
+    const data = getAppData();
+    const user = data.users.find(u => u.id === data.currentUser);
+    if (!user) return;
+
+    // Level 1: lessons 1-12
+    // Level 2: lessons 13-24
+    // Level 3: lessons 25-36
+    // Level 4: lessons 37-48
+    // Level 5: lessons 49-60 (but actually stored as 61-72)
+    // Level 6: lessons 76-84
+    // This unlocks all prior levels so Level 7 is accessible
+    const levelsToUnlock = [
+        // Level 1 (12 lessons)
+        ...Array.from({ length: 12 }, (_, i) => i + 1),
+        // Level 2 (12 lessons)
+        ...Array.from({ length: 12 }, (_, i) => i + 13),
+        // Level 3 (12 lessons)
+        ...Array.from({ length: 12 }, (_, i) => i + 25),
+        // Level 4 (12 lessons)
+        ...Array.from({ length: 12 }, (_, i) => i + 37),
+        // Level 5 (12 lessons, stored as 61-72)
+        ...Array.from({ length: 12 }, (_, i) => i + 61),
+        // Level 6 (9 lessons, stored as 76-84)
+        ...Array.from({ length: 9 }, (_, i) => i + 76),
+    ];
+
+    for (const level of levelsToUnlock) {
+        if (!user.progress.completedLevels.find(l => l.level === level)) {
+            user.progress.completedLevels.push({
+                level,
+                completedAt: new Date().toISOString(),
+                xpEarned: 10,
+                coinsEarned: 5,
+                attempts: 1,
+                timeSpent: 60
+            });
+        }
+    }
+
+    user.progress.currentLevel = 85;
+    user.progress.xp += 500;
+    user.progress.coins += 200;
+    saveAppData(data);
+}
+
+export function resetPassword(username: string, code: string, newPassword: string): { success: boolean; error?: string } {
+    // Verify the code first
+    const verification = verifyResetCode(username, code);
+    if (!verification.success) {
+        return verification;
+    }
+
+    // Validate new password
+    const validation = validatePassword(newPassword);
+    if (!validation.isValid) {
+        return { success: false, error: 'PASSWORD_WEAK' };
+    }
+
+    // Update the password
+    const data = getAppData();
+    const user = data.users.find(u => u.username.toLowerCase() === username.toLowerCase());
+
+    if (!user) {
+        return { success: false, error: 'USERNAME_NOT_FOUND' };
+    }
+
+    user.password = simpleHash(newPassword);
+    saveAppData(data);
+
+    // Clean up the reset request
+    const resets = getPasswordResets();
+    const filteredResets = resets.filter(r => r.username.toLowerCase() !== username.toLowerCase());
+    savePasswordResets(filteredResets);
+
+    return { success: true };
 }

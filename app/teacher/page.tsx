@@ -96,7 +96,7 @@ ${user.progress.completedLevels.map(l => `  - Level ${l.level}: ${l.xpEarned} XP
                 "Run code and see results"
             ],
             tips: "Let them experiment! If they type print(Hello) without quotes, let them see the error.",
-            duration: "15-20 min"
+            duration: "45-60 min"
         },
         {
             level: 2,
@@ -108,19 +108,31 @@ ${user.progress.completedLevels.map(l => `  - Level ${l.level}: ${l.xpEarned} XP
                 "Understand variable naming"
             ],
             tips: "Encourage them to change numbers and see what happens. Hands-on is the best way to learn!",
-            duration: "20-25 min"
+            duration: "50-70 min"
         },
         {
             level: 3,
-            title: "Combine Text",
-            skills: ["String Concatenation", "f-strings", "User Input"],
+            title: "Lists & Collections",
+            skills: ["Lists", "Indexing", "List Methods"],
             objectives: [
-                "Join text together",
-                "Use input() to get user responses",
-                "Create personalized messages"
+                "Create and modify lists",
+                "Access items by index",
+                "Use append, remove, and other methods"
             ],
-            tips: "Have them create a greeting with their own name. Personalization boosts engagement.",
-            duration: "20-25 min"
+            tips: "Have them create a list of their favorite things. Real-world examples make lists click!",
+            duration: "50-65 min"
+        },
+        {
+            level: 4,
+            title: "Functions",
+            skills: ["def keyword", "Parameters", "Return Values"],
+            objectives: [
+                "Define and call functions",
+                "Pass arguments to functions",
+                "Return values from functions"
+            ],
+            tips: "Compare functions to recipes - ingredients go in, a dish comes out. Makes the concept relatable!",
+            duration: "45-60 min"
         }
     ];
 
@@ -175,7 +187,7 @@ ${user.progress.completedLevels.map(l => `  - Level ${l.level}: ${l.xpEarned} XP
                                         <Unlock size={18} /> Unlock Dashboard
                                     </button>
                                 </form>
-                                <p className={styles.hint}>Hint: teacher2024</p>
+                                <p className={styles.hint}>Hint: Ask your teacher!</p>
                             </div>
                         ) : (
                             <div className={styles.dashboardContent}>
@@ -283,15 +295,15 @@ ${user.progress.completedLevels.map(l => `  - Level ${l.level}: ${l.xpEarned} XP
                         <div className={styles.statCard}>
                             <Target size={32} className="text-pink-400" />
                             <div>
-                                <div className={styles.statValue}>14</div>
+                                <div className={styles.statValue}>62</div>
                                 <div className={styles.statLabel}>Lessons</div>
                             </div>
                         </div>
                         <div className={styles.statCard}>
                             <Clock size={32} className="text-amber-400" />
                             <div>
-                                <div className={styles.statValue}>~60</div>
-                                <div className={styles.statLabel}>Minutes Total</div>
+                                <div className={styles.statValue}>~4 hrs</div>
+                                <div className={styles.statLabel}>Total Content</div>
                             </div>
                         </div>
                     </div>

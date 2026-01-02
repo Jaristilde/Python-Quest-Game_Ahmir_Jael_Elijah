@@ -480,26 +480,34 @@ export function unlockAllLevels(): void {
     const user = data.users.find(u => u.id === data.currentUser);
     if (!user) return;
 
-    // Level 1: lessons 1-12
-    // Level 2: lessons 13-24
-    // Level 3: lessons 25-36
-    // Level 4: lessons 37-48
-    // Level 5: lessons 49-60 (but actually stored as 61-72)
+    // Level 1: lessons 1-15
+    // Level 2: lessons 16-33
+    // Level 3: lessons 34-49
+    // Level 4: lessons 50-62
+    // Level 5: lessons 63-75
     // Level 6: lessons 76-84
-    // This unlocks all prior levels so Level 7 is accessible
+    // Level 7: lessons 85-96
+    // Level 8: lessons 97-108
+    // Level 9: lessons 109-115
     const levelsToUnlock = [
-        // Level 1 (12 lessons)
-        ...Array.from({ length: 12 }, (_, i) => i + 1),
-        // Level 2 (12 lessons)
-        ...Array.from({ length: 12 }, (_, i) => i + 13),
-        // Level 3 (12 lessons)
-        ...Array.from({ length: 12 }, (_, i) => i + 25),
-        // Level 4 (12 lessons)
-        ...Array.from({ length: 12 }, (_, i) => i + 37),
-        // Level 5 (12 lessons, stored as 61-72)
-        ...Array.from({ length: 12 }, (_, i) => i + 61),
-        // Level 6 (9 lessons, stored as 76-84)
+        // Level 1 (15 lessons: 1-15)
+        ...Array.from({ length: 15 }, (_, i) => i + 1),
+        // Level 2 (18 lessons: 16-33)
+        ...Array.from({ length: 18 }, (_, i) => i + 16),
+        // Level 3 (16 lessons: 34-49)
+        ...Array.from({ length: 16 }, (_, i) => i + 34),
+        // Level 4 (13 lessons: 50-62)
+        ...Array.from({ length: 13 }, (_, i) => i + 50),
+        // Level 5 (13 lessons: 63-75)
+        ...Array.from({ length: 13 }, (_, i) => i + 63),
+        // Level 6 (9 lessons: 76-84)
         ...Array.from({ length: 9 }, (_, i) => i + 76),
+        // Level 7 (12 lessons: 85-96)
+        ...Array.from({ length: 12 }, (_, i) => i + 85),
+        // Level 8 (12 lessons: 97-108)
+        ...Array.from({ length: 12 }, (_, i) => i + 97),
+        // Level 9 (7 lessons: 109-115)
+        ...Array.from({ length: 7 }, (_, i) => i + 109),
     ];
 
     for (const level of levelsToUnlock) {
@@ -515,9 +523,9 @@ export function unlockAllLevels(): void {
         }
     }
 
-    user.progress.currentLevel = 85;
-    user.progress.xp += 500;
-    user.progress.coins += 200;
+    user.progress.currentLevel = 116;
+    user.progress.xp += 1000;
+    user.progress.coins += 500;
     saveAppData(data);
 }
 

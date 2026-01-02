@@ -41,8 +41,8 @@ export default function UnlockPage() {
                 </h1>
                 <p style={{ color: '#888', marginBottom: '2rem' }}>
                     {unlocked
-                        ? 'You now have access to all levels including Level 7!'
-                        : 'This will unlock all levels for testing purposes.'}
+                        ? 'You now have access to all 9 levels including the final level!'
+                        : 'This will unlock all 9 levels for testing purposes.'}
                 </p>
 
                 {!unlocked ? (
@@ -64,7 +64,7 @@ export default function UnlockPage() {
                     </button>
                 ) : (
                     <button
-                        onClick={() => router.push('/level7')}
+                        onClick={() => router.push('/level9')}
                         style={{
                             padding: '1rem 2rem',
                             fontSize: '1.1rem',
@@ -77,7 +77,7 @@ export default function UnlockPage() {
                             marginBottom: '1rem'
                         }}
                     >
-                        Go to Level 7
+                        Go to Level 9 (Final Level!)
                     </button>
                 )}
 

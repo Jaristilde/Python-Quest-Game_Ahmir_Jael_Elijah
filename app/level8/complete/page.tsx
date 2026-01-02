@@ -161,28 +161,28 @@ export default function Level8Complete() {
                     style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
                 >
                     <Link
-                        href="/"
+                        href="/level9"
                         style={{
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '0.75rem',
                             padding: '1rem 2rem',
-                            background: 'linear-gradient(135deg, #f97316, #ef4444)',
+                            background: 'linear-gradient(135deg, #FF79C6, #8BE9FD)',
                             color: 'white',
                             textDecoration: 'none',
                             borderRadius: '12px',
                             fontWeight: 700,
                             fontSize: '1.1rem',
-                            boxShadow: '0 4px 20px rgba(249, 115, 22, 0.4)'
+                            boxShadow: '0 4px 20px rgba(255, 121, 198, 0.4)'
                         }}
                     >
                         <Trophy size={20} />
-                        Back to Home
+                        Continue to Level 9: APIs & JSON
                         <ChevronRight size={20} />
                     </Link>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                        More levels coming soon!
+                        Ready for the final challenge?
                     </p>
                 </motion.div>
             </div>

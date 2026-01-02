@@ -90,17 +90,17 @@ export const LEVELS: LevelConfig[] = [
     emoji: "🏗️",
     route: "/level8",
     lessonIdStart: 97,
-    lessonIdEnd: 110
+    lessonIdEnd: 108
   },
   {
     id: 9,
-    name: "Working With APIs",
+    name: "APIs & JSON",
     lessons: 7,
-    project: "TBD",
-    emoji: "🔌",
+    project: "Fun Facts Generator",
+    emoji: "🌐",
     route: "/level9",
-    lessonIdStart: 111,
-    lessonIdEnd: 117
+    lessonIdStart: 109,
+    lessonIdEnd: 115
   },
 ];
 

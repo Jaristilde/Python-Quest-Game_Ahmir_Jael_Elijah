@@ -66,7 +66,7 @@ export default function Level9Hub() {
     return (
         <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #1E1E2E 0%, #2D1B3D 50%, #1E1E2E 100%)', color: 'var(--text-primary)' }}>
             {/* Header */}
-            <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.5rem', borderBottom: '1px solid rgba(255, 121, 198, 0.3)' }}>
+            <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.5rem 1rem 4.5rem', borderBottom: '1px solid rgba(255, 121, 198, 0.3)' }}>
                 <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.9rem' }}>
                     <ArrowLeft size={18} /> Home
                 </Link>

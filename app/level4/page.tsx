@@ -91,7 +91,7 @@ export default function Level4Hub() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                padding: '1rem 1.5rem',
+                padding: '1rem 1.5rem 1rem 4.5rem',
                 background: 'rgba(30, 30, 46, 0.95)',
                 borderBottom: '1px solid var(--border-default)',
                 position: 'sticky',

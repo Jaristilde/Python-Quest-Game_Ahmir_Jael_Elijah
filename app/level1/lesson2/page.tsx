@@ -341,6 +341,29 @@ export default function Lesson2() {
                                     <div className={`${styles.outputText} ${output.includes('Oops') || output.includes('Tip') ? 'error' : ''}`}>
                                         {output}
                                     </div>
+                                    {(output.includes('Oops') || output.includes('Tip')) && (
+                                        <motion.button
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            onClick={() => setOutput('')}
+                                            style={{
+                                                marginTop: '1rem',
+                                                padding: '0.75rem 1.5rem',
+                                                background: 'linear-gradient(135deg, #f97316, #ef4444)',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '8px',
+                                                fontWeight: 600,
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.5rem',
+                                                fontSize: '1rem'
+                                            }}
+                                        >
+                                            💪 Try Again - You've got this!
+                                        </motion.button>
+                                    )}
                                 </motion.div>
                             )}
                         </div>

@@ -32,6 +32,15 @@ export default function Lesson4() {
 
         for (const line of lines) {
             const trimmed = line.trim();
+            if (!trimmed) continue;
+
+            // Check for capital Print (common kid mistake!)
+            if (trimmed.match(/^Print\s*\(/i) && !trimmed.match(/^print\s*\(/)) {
+                outputLines.push('Oops! Python uses lowercase "print" not "Print" 🔤');
+                outputLines.push('Try: print(...) instead of Print(...)');
+                continue;
+            }
+
             const printMatch = trimmed.match(/^print\s*\((.+)\)$/);
             if (printMatch) {
                 try {
@@ -44,11 +53,15 @@ export default function Lesson4() {
                         outputLines.push('Error: Only use numbers and +, -, *, /');
                     }
                 } catch {
-                    outputLines.push('Error: Check your math!');
+                    outputLines.push('Oops! Check your math - something doesn\'t add up! 🧮');
                 }
+            } else if (trimmed.length > 0 && !trimmed.startsWith('#')) {
+                // Line doesn't match print pattern
+                outputLines.push(`Hmm, I don't understand: "${trimmed}"`);
+                outputLines.push('Try using: print(your math here)');
             }
         }
-        setOutput(outputLines.length > 0 ? outputLines.join('\n') : 'Run your code!');
+        setOutput(outputLines.length > 0 ? outputLines.join('\n') : 'Type some code and click Run! 🚀');
     };
 
     const checkQuiz = () => {
@@ -128,16 +141,6 @@ export default function Lesson4() {
                             </div>
                         </div>
 
-                        <div className={styles.codeSection}>
-                            <h3>🎮 Your Turn!</h3>
-                            <div className={styles.editor}>
-                                <div className={styles.codeHeader}><span>your_code.py</span><span>Python</span></div>
-                                <textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder={'print(100 + 50)\nprint(8 * 7)'} spellCheck={false} />
-                            </div>
-                            <button className={styles.runBtn} onClick={runCode}><Play size={18} /> Run Code</button>
-                            {output && <div className={styles.outputBox}><div className={styles.outputLabel}>Output:</div><div className={styles.outputText}>{output}</div></div>}
-                        </div>
-
                         <div className={styles.challenges}>
                             <h3>🎯 Now You Try:</h3>
                             <ul className={styles.challengeList}>
@@ -150,6 +153,16 @@ export default function Lesson4() {
                         <div className={styles.tipBox}>
                             <Lightbulb size={20} className="text-amber-400 flex-shrink-0" />
                             <p><strong>Remember:</strong> Use <code>*</code> for multiply (not x) and <code>/</code> for divide!</p>
+                        </div>
+
+                        <div className={styles.codeSection}>
+                            <h3>🎮 Your Turn!</h3>
+                            <div className={styles.editor}>
+                                <div className={styles.codeHeader}><span>your_code.py</span><span>Python</span></div>
+                                <textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder={'print(100 + 50)\nprint(8 * 7)'} spellCheck={false} />
+                            </div>
+                            <button className={styles.runBtn} onClick={runCode}><Play size={18} /> Run Code</button>
+                            {output && <div className={styles.outputBox}><div className={styles.outputLabel}>Output:</div><div className={styles.outputText}>{output}</div></div>}
                         </div>
 
                         <div className={styles.navBar}>

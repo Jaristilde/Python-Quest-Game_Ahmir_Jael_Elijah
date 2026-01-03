@@ -365,7 +365,9 @@
     text-align: left;
     cursor: pointer;
     transition: all 0.2s;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #FFFFFF;
 }
 
 .quizOption:hover {
